@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Auth - Processing</title>
+    <script>
+        // Get authorization code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if (code) {
+            // Simulate getting user data (in production, send to backend)
+            const simulatedUser = {
+                username: 'DiscordUser#' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+                discordId: 'discord_' + Date.now(),
+                isGuest: false
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('cyberspaceUser', JSON.stringify(simulatedUser));
+            
+            // Send message back to main window and close
+            if (window.opener) {
+                window.opener.postMessage({
+                    type: 'DISCORD_AUTH_COMPLETE',
+                    user: simulatedUser
+                }, '*');
+            }
+            
+            // Auto-close after 1 second
+            setTimeout(() => window.close(), 1000);
+        }
+        
+        // Show status
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('status').textContent = 
+                code ? 'Authentication successful! Closing...' : 'No code received';
+        });
+    </script>
+</head>
+<body style="background: #0a0e17; color: white; font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+    <div style="text-align: center; padding: 30px;">
+        <h1>Discord Authentication</h1>
+        <p id="status">Processing...</p>
+        <p style="color: #00f2ff;">This window should close automatically</p>
+    </div>
+</body>
+</html>
