@@ -655,111 +655,84 @@
         illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
         // ============================================
-        // DISCORD AUTHENTICATION FUNCTIONS
+        // DISCORD AUTH REDIRECT HANDLER
         // ============================================
 
-        // Handle incoming messages from Discord callback
-        function handleDiscordAuthMessage(event) {
-            // Security check - only accept messages from trusted origins
-            const allowedOrigins = [
-                'https://tlqtlq.github.io',
-                'http://localhost:8000',
-                'http://127.0.0.1:8000',
-                'http://localhost:5500',
-                'http://127.0.0.1:5500'
-            ];
+        // Check for stored Discord auth code on page load
+        function checkForDiscordAuth() {
+            const code = localStorage.getItem('discordAuthCode');
+            const authTime = localStorage.getItem('discordAuthTime');
             
-            if (!allowedOrigins.includes(event.origin)) {
-                console.log('Message from untrusted origin:', event.origin);
-                return;
-            }
-            
-            console.log('Received auth message:', event.data);
-            
-            if (event.data && event.data.type === 'DISCORD_AUTH_CODE') {
-                const code = event.data.code;
+            if (code && authTime) {
+                // Check if code is fresh (less than 5 minutes old)
+                const currentTime = Date.now();
+                const fiveMinutes = 5 * 60 * 1000;
                 
-                // Close the popup if it's still open
-                if (discordAuthPopup && !discordAuthPopup.closed) {
-                    discordAuthPopup.close();
+                if (currentTime - parseInt(authTime) < fiveMinutes) {
+                    console.log('Found Discord auth code, processing...');
+                    
+                    // Process the code
+                    exchangeDiscordCodeForUserInfo(code);
+                    
+                    // Clear the stored code
+                    localStorage.removeItem('discordAuthCode');
+                    localStorage.removeItem('discordAuthTime');
+                } else {
+                    // Code is too old
+                    console.log('Discord auth code expired');
+                    localStorage.removeItem('discordAuthCode');
+                    localStorage.removeItem('discordAuthTime');
                 }
-                
-                // Process the code
-                exchangeDiscordCodeForUserInfo(code);
             }
         }
 
-        // Listen for messages from the callback page
-        window.addEventListener('message', handleDiscordAuthMessage, false);
-
-        // Exchange Discord code for user info (requires backend in production)
+        // Exchange Discord code for user info
         async function exchangeDiscordCodeForUserInfo(code) {
-            console.log('Exchanging Discord code:', code);
+            console.log('Processing Discord code:', code.substring(0, 20) + '...');
             
-            showTempNotification('Processing Discord login...');
+            showTempNotification('Connecting to Discord...');
             
-            try {
-                // FOR DEMO PURPOSES ONLY - Create a mock user
-                // In production, you would send this code to your backend server
-                const mockUser = {
-                    username: 'DiscordUser_' + Math.floor(Math.random() * 10000),
-                    discordId: 'discord_' + Date.now(),
-                    isGuest: false,
-                    avatarUrl: null,
-                    timestamp: new Date().toISOString(),
-                    discriminator: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
-                    accentColor: '#5865F2'
-                };
-                
-                // Save user
-                currentUser = mockUser;
-                isGuest = false;
-                localStorage.setItem('cyberspaceUser', JSON.stringify(mockUser));
-                
-                // Update UI
-                updateUserDisplay();
-                updateWelcomeBanner();
-                updateAuthButton();
-                
-                showTempNotification(`Welcome, ${mockUser.username}!`);
-                
-                // Note for future: To get REAL Discord user info, you need a backend server
-                console.log(`
-                ============================================
-                DISCORD AUTH SUCCESSFUL (DEMO MODE)
-                Code: ${code.substring(0, 20)}...
-                
-                For real Discord authentication:
-                1. Set up a backend server (Node.js/Express, Python, etc.)
-                2. Create an endpoint to exchange code for token
-                3. Update this function to call your backend
-                ============================================
-                `);
-                
-            } catch (error) {
-                console.error('Auth error:', error);
-                showTempNotification('Authentication failed. Using demo mode.');
-                
-                // Fallback to demo user
-                const demoUser = {
-                    username: 'DemoUser',
-                    discordId: 'demo_' + Date.now(),
-                    isGuest: false,
-                    avatarUrl: null,
-                    timestamp: new Date().toISOString()
-                };
-                
-                currentUser = demoUser;
-                isGuest = false;
-                localStorage.setItem('cyberspaceUser', JSON.stringify(demoUser));
-                updateUserDisplay();
-                updateWelcomeBanner();
-                updateAuthButton();
-            }
+            // For DEMO purposes - create a fake Discord user
+            // In production, you would send this to your backend
+            
+            const fakeDiscordUser = {
+                username: 'DiscordUser_' + Math.floor(Math.random() * 1000),
+                discriminator: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+                discordId: 'discord_' + Date.now(),
+                avatar: null,
+                banner: null,
+                accentColor: '#5865F2'
+            };
+            
+            // Create our user object
+            const userData = {
+                username: fakeDiscordUser.username,
+                discriminator: fakeDiscordUser.discriminator,
+                fullUsername: fakeDiscordUser.username + '#' + fakeDiscordUser.discriminator,
+                discordId: fakeDiscordUser.discordId,
+                isGuest: false,
+                avatarUrl: fakeDiscordUser.avatar ? 
+                    `https://cdn.discordapp.com/avatars/${fakeDiscordUser.discordId}/${fakeDiscordUser.avatar}.png` : null,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save user
+            currentUser = userData;
+            isGuest = false;
+            localStorage.setItem('cyberspaceUser', JSON.stringify(userData));
+            
+            // Update UI
+            updateUserDisplay();
+            updateWelcomeBanner();
+            updateAuthButton();
+            
+            showTempNotification(`Welcome, ${userData.username}!`);
+            
+            console.log('Demo Discord user created:', userData);
         }
 
         // ============================================
-        // USER MANAGEMENT FUNCTIONS
+        // USER MANAGEMENT FUNCTIONS (UPDATED)
         // ============================================
 
         // Load user from localStorage on page load
@@ -771,7 +744,7 @@
                 isGuest = userData.isGuest;
                 updateUserDisplay();
                 updateWelcomeBanner();
-                updateAuthButton();
+                updateAuthButton(); // Update the button based on saved user state
             }
         }
 
@@ -783,10 +756,14 @@
             if (currentUser) {
                 if (!isGuest && currentUser.username) {
                     // Show Discord username
-                    welcomeText.textContent = `Welcome, ${currentUser.username}!`;
+                    if (currentUser.discriminator) {
+                        welcomeText.textContent = `Welcome, ${currentUser.username}!`;
+                    } else {
+                        welcomeText.textContent = `Welcome, ${currentUser.username}!`;
+                    }
                 } else {
                     // Show Guest
-                    welcomeText.textContent = `Welcome, Guest!`;
+                    welcomeText.textContent = `Welcome to Cyberspace Luck Simulator!`;
                 }
 
                 // Display avatar or placeholder
@@ -806,8 +783,8 @@
                         // Use first letter of Discord username
                         placeholder.textContent = currentUser.username.charAt(0).toUpperCase();
                     } else {
-                        // Guest icon
-                        placeholder.textContent = '👤';
+                        // Default icon
+                        placeholder.textContent = '🎮';
                     }
                     avatarContainer.appendChild(placeholder);
                 }
@@ -818,26 +795,27 @@
             }
         }
 
-        // Update the authentication button based on current user state
+        // UPDATED: Update the authentication button based on current user state
         function updateAuthButton() {
             const authButton = document.getElementById('discord-auth-button');
             const authButtonText = document.getElementById('auth-button-text');
             const discordIcon = document.getElementById('discord-icon');
 
             if (currentUser && !isGuest) {
-                // User is signed in with Discord
-                authButtonText.textContent = `Signed in as ${currentUser.username}`;
+                // User is signed in with Discord - show "Logged in as (username)"
+                const displayName = currentUser.username || 'Discord User';
+                authButtonText.textContent = `Logged in as ${displayName}`;
                 discordIcon.textContent = '✓';
                 authButton.classList.remove('guest-mode');
                 authButton.title = 'Click to switch to guest mode';
             } else if (currentUser && isGuest) {
-                // User is playing as guest
-                authButtonText.textContent = 'Playing as Guest';
-                discordIcon.textContent = '👤';
-                authButton.classList.add('guest-mode');
-                authButton.title = 'Click to sign in with Discord';
+                // User is playing as guest - show "Sign in"
+                authButtonText.textContent = 'Sign in with Discord';
+                discordIcon.textContent = '🅭';
+                authButton.classList.remove('guest-mode');
+                authButton.title = 'Sign in with Discord to save progress';
             } else {
-                // No user saved yet (default state)
+                // No user saved yet (default state) - show "Sign in"
                 authButtonText.textContent = 'Sign in with Discord';
                 discordIcon.textContent = '🅭';
                 authButton.classList.remove('guest-mode');
@@ -849,9 +827,9 @@
             const displayElement = document.getElementById('current-user-display');
             if (displayElement) {
                 if (currentUser && !isGuest) {
-                    displayElement.textContent = `Signed in as ${currentUser.username}`;
+                    displayElement.textContent = `Logged in as ${currentUser.username}`;
                 } else {
-                    displayElement.textContent = 'Guest';
+                    displayElement.textContent = 'Not signed in';
                 }
             }
         }
@@ -861,11 +839,8 @@
             if (currentUser && !isGuest) {
                 // Currently signed in with Discord, switch to guest
                 playAsGuest();
-            } else if (currentUser && isGuest) {
-                // Currently guest, switch to Discord
-                loginWithDiscord();
             } else {
-                // No user saved yet, default to Discord sign in
+                // Currently guest or no user, switch to Discord
                 loginWithDiscord();
             }
         }
@@ -1366,7 +1341,11 @@
         updateWelcomeBanner();
         updateAuthButton();
         
-        // Debug info
+        // Check for Discord auth on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            checkForDiscordAuth();
+        });
+        
         console.log('Cyberspace Luck Simulator loaded');
         console.log('Discord Auth URL:', DISCORD_AUTH_URL);
         console.log('Current user:', currentUser);
