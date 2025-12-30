@@ -79,54 +79,33 @@
             width: 100%;
         }
 
+        /* Updated Welcome Banner - Navy Blue/Darker Cyber Theme */
         .welcome-banner {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             font-size: 1.8rem;
-            color: #00f2ff;
-            text-shadow: 0 0 10px #00f2ff;
+            color: #001f5e; /* Navy blue color */
+            text-shadow: 0 0 15px rgba(0, 31, 94, 0.8), 0 0 30px rgba(0, 31, 94, 0.4); /* Navy glow */
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 40px; /* Space between banner and buttons */
+            margin-bottom: 40px;
             text-align: center;
             padding: 0 20px;
+            -webkit-text-stroke: 1px rgba(0, 136, 255, 0.3);
+            paint-order: stroke fill;
         }
 
-        .user-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid #00f2ff;
-            margin-bottom: 15px;
-            object-fit: cover;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
-        }
-
-        .avatar-placeholder {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid #00f2ff;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: rgba(0, 20, 40, 0.8);
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
-        }
-
-        /* Discord authentication button styles */
-        .discord-auth-btn {
-            background: #5865F2;
-            border: 1px solid #4752c4;
-            color: white;
+        /* Account System Styles */
+        .account-btn {
+            background: #001a4d;
+            border: 1px solid #002d7a;
+            color: #00f2ff;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             letter-spacing: 0.2em;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
-            transition: all 0.1s;
+            text-shadow: 0 0 8px rgba(0, 242, 255, 0.7);
+            box-shadow: 0 0 15px rgba(0, 31, 94, 0.4);
+            transition: all 0.2s;
             cursor: pointer;
             text-transform: uppercase;
             width: 320px;
@@ -140,28 +119,30 @@
             gap: 12px;
         }
 
-        .discord-auth-btn:hover {
-            box-shadow: 0 0 30px rgba(88, 101, 242, 0.6);
-            background: #4752c4;
-            border-color: #3c45a5;
+        .account-btn:hover {
+            box-shadow: 0 0 30px rgba(0, 31, 94, 0.7);
+            background: #002d7a;
+            border-color: #0044aa;
             transform: translateY(-2px);
+            color: #ffffff;
+            text-shadow: 0 0 12px #ffffff;
         }
 
-        .discord-auth-btn:active {
+        .account-btn:active {
             transform: scale(0.95);
-            background: #3c45a5;
+            background: #001a4d;
         }
 
-        .discord-auth-btn.guest-mode {
-            background: #4a5568;
-            border-color: #2d3748;
-            box-shadow: 0 0 15px rgba(74, 85, 104, 0.3);
+        .account-btn.logged-in {
+            background: #003366;
+            border-color: #00f2ff;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
         }
 
-        .discord-auth-btn.guest-mode:hover {
-            box-shadow: 0 0 30px rgba(74, 85, 104, 0.6);
-            background: #2d3748;
-            border-color: #1a202c;
+        .account-btn.logged-in:hover {
+            box-shadow: 0 0 35px rgba(0, 242, 255, 0.5);
+            background: #004488;
         }
 
         #cinematic-overlay {
@@ -438,6 +419,102 @@
             margin-top: 10px;
         }
 
+        /* Account Modal Styles */
+        #account-modal {
+            position: fixed; inset: 0; background: rgba(1, 4, 10, 0.95); z-index: 800;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease; text-align: center; padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .account-container {
+            width: 90%; max-width: 400px;
+            background: rgba(0, 10, 30, 0.95);
+            border: 2px solid rgba(0, 31, 94, 0.5);
+            box-shadow: 0 0 40px rgba(0, 31, 94, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        .account-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            color: #001f5e;
+            text-shadow: 0 0 10px rgba(0, 31, 94, 0.8);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .account-input {
+            width: 100%;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #001a4d;
+            color: #00f2ff;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .account-input:focus {
+            border-color: #00f2ff;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .account-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .account-action-btn {
+            flex: 1;
+            padding: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .account-action-btn.primary {
+            background: #001a4d;
+            color: #00f2ff;
+            border: 1px solid #002d7a;
+        }
+
+        .account-action-btn.primary:hover {
+            background: #002d7a;
+            box-shadow: 0 0 15px rgba(0, 31, 94, 0.5);
+        }
+
+        .account-action-btn.secondary {
+            background: transparent;
+            color: #a0aec0;
+            border: 1px solid #2d3748;
+        }
+
+        .account-action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #4a5568;
+        }
+
+        .account-error {
+            color: #ff6b6b;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
         /* Back Button Styles */
         .back-btn {
             background: rgba(0, 0, 0, 0.6);
@@ -473,21 +550,18 @@
 
     <div id="entry-overlay">
         <div class="main-menu-content">
-            <!-- Welcome Banner with Avatar -->
-            <div id="welcome-banner" class="welcome-banner">
-                <div id="user-avatar-container">
-                    <!-- Avatar or placeholder will be inserted here by JavaScript -->
-                </div>
-                <div id="welcome-text">Welcome to Cyberspace Luck Simulator!</div>
+            <!-- Welcome Banner - Updated Navy Blue/Darker Cyber Theme -->
+            <div class="welcome-banner">
+                Welcome to Cyberspace Luck Simulator
             </div>
 
             <!-- Main Action Buttons -->
             <button onclick="startSimulator()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Start Simulator</button>
             
-            <!-- Discord Authentication Button (in between Start Simulator and Leaderboard) -->
-            <button id="discord-auth-button" class="discord-auth-btn" onclick="toggleAuthMode()">
-                <span id="discord-icon">🅭</span>
-                <span id="auth-button-text">Sign in with Discord</span>
+            <!-- Account Button (Replaces Discord Auth) -->
+            <button id="account-button" class="account-btn" onclick="toggleAccountMenu()">
+                <span id="account-icon">👤</span>
+                <span id="account-button-text">Create Account / Log In</span>
             </button>
             
             <button onclick="showLeaderboard()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Leaderboard</button>
@@ -495,7 +569,29 @@
         </div>
     </div>
 
-    <!-- REMOVED: The entire #auth-overlay div is gone -->
+    <!-- Account Modal -->
+    <div id="account-modal">
+        <div class="account-container">
+            <div class="account-title" id="account-modal-title">Create Account</div>
+            
+            <input type="text" id="account-username" class="account-input" placeholder="Username" maxlength="20">
+            <input type="password" id="account-password" class="account-input" placeholder="Password">
+            <input type="password" id="account-confirm-password" class="account-input" placeholder="Confirm Password" style="display: none;">
+            
+            <div class="account-error" id="account-error"></div>
+            
+            <div class="account-actions">
+                <button id="account-primary-btn" class="account-action-btn primary">Create Account</button>
+                <button onclick="hideAccountModal()" class="account-action-btn secondary">Cancel</button>
+            </div>
+            
+            <div class="mt-6 pt-6 border-t border-gray-800">
+                <button id="account-switch-btn" class="text-cyan-400 text-sm font-bold tracking-wider uppercase hover:text-cyan-300 transition-colors">
+                    Already have an account? Log In
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="leaderboard-overlay">
         <div class="leaderboard-container">
@@ -503,7 +599,7 @@
                 <div class="leaderboard-title">Leaderboard</div>
                 <div class="leaderboard-subtitle">Lowest rolls to roll illusionary</div>
                 <div class="leaderboard-subtitle" style="font-size: 10px; color: rgba(0, 242, 255, 0.5); margin-top: 5px;">
-                    Status: <span id="current-user-display">Not signed in</span>
+                    Status: <span id="current-user-display">Not logged in</span>
                 </div>
             </div>
             <div class="leaderboard-list" id="leaderboard-list">
@@ -511,7 +607,7 @@
             </div>
             <div class="leaderboard-footer">
                 <button onclick="hideLeaderboard()" class="roll-btn px-8 py-3 text-sm">Back to Simulator</button>
-                <div class="leaderboard-note">* Only Discord accounts appear on leaderboard *</div>
+                <div class="leaderboard-note">* Only logged in accounts appear on leaderboard *</div>
             </div>
         </div>
     </div>
@@ -634,17 +730,11 @@
 
         // User authentication state
         let currentUser = null;
-        let isGuest = true;
-        let discordAuthPopup = null;
+        let isLoggedIn = false;
+        let isCreateAccountMode = true; // Tracks whether we're in create account or login mode
 
-        // Leaderboard data - Will be fetched from your backend
+        // Leaderboard data
         let leaderboardData = [];
-
-        // Discord OAuth2 Configuration - UPDATED FOR YOUR NEW REPOSITORY
-        const DISCORD_CLIENT_ID = '1455676135739228182';
-        const DISCORD_REDIRECT_URI = encodeURIComponent('https://tlqtlq.github.io/Cyberspace-Luck-Simulator/auth/discord-callback.html');
-        const DISCORD_SCOPE = encodeURIComponent('identify');
-        const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${DISCORD_REDIRECT_URI}&response_type=code&scope=${DISCORD_SCOPE}&prompt=none`;
 
         const illusionarySFX = new Audio('https://pomf2.lain.la/f/vvei5e1c.mov');
         const bgm = new Audio('https://pomf2.lain.la/f/jfj7608j.ogg');
@@ -655,252 +745,258 @@
         illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
         // ============================================
-        // DISCORD AUTH REDIRECT HANDLER
+        // ACCOUNT SYSTEM FUNCTIONS
         // ============================================
 
-        // Check for stored Discord auth code on page load
-        function checkForDiscordAuth() {
-            const code = localStorage.getItem('discordAuthCode');
-            const authTime = localStorage.getItem('discordAuthTime');
-            
-            if (code && authTime) {
-                // Check if code is fresh (less than 5 minutes old)
-                const currentTime = Date.now();
-                const fiveMinutes = 5 * 60 * 1000;
-                
-                if (currentTime - parseInt(authTime) < fiveMinutes) {
-                    console.log('Found Discord auth code, processing...');
-                    
-                    // Process the code
-                    exchangeDiscordCodeForUserInfo(code);
-                    
-                    // Clear the stored code
-                    localStorage.removeItem('discordAuthCode');
-                    localStorage.removeItem('discordAuthTime');
-                } else {
-                    // Code is too old
-                    console.log('Discord auth code expired');
-                    localStorage.removeItem('discordAuthCode');
-                    localStorage.removeItem('discordAuthTime');
-                }
+        // Show/hide account modal
+        function toggleAccountMenu() {
+            if (isLoggedIn) {
+                // If logged in, log out
+                logout();
+            } else {
+                // If not logged in, show account modal
+                showAccountModal();
             }
         }
 
-        // Exchange Discord code for user info
-        async function exchangeDiscordCodeForUserInfo(code) {
-            console.log('Processing Discord code:', code.substring(0, 20) + '...');
+        function showAccountModal() {
+            resetAccountForm();
+            document.getElementById('account-modal').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('account-modal').style.opacity = '1';
+            }, 10);
+        }
+
+        function hideAccountModal() {
+            document.getElementById('account-modal').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('account-modal').style.display = 'none';
+            }, 500);
+        }
+
+        function resetAccountForm() {
+            document.getElementById('account-username').value = '';
+            document.getElementById('account-password').value = '';
+            document.getElementById('account-confirm-password').value = '';
+            document.getElementById('account-error').textContent = '';
             
-            showTempNotification('Connecting to Discord...');
+            // Set to create account mode by default
+            setCreateAccountMode(true);
+        }
+
+        function setCreateAccountMode(isCreateMode) {
+            isCreateAccountMode = isCreateMode;
             
-            // For DEMO purposes - create a fake Discord user
-            // In production, you would send this to your backend
+            const title = document.getElementById('account-modal-title');
+            const confirmPassInput = document.getElementById('account-confirm-password');
+            const primaryBtn = document.getElementById('account-primary-btn');
+            const switchBtn = document.getElementById('account-switch-btn');
             
-            const fakeDiscordUser = {
-                username: 'DiscordUser_' + Math.floor(Math.random() * 1000),
-                discriminator: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
-                discordId: 'discord_' + Date.now(),
-                avatar: null,
-                banner: null,
-                accentColor: '#5865F2'
+            if (isCreateMode) {
+                title.textContent = 'Create Account';
+                confirmPassInput.style.display = 'block';
+                primaryBtn.textContent = 'Create Account';
+                switchBtn.textContent = 'Already have an account? Log In';
+            } else {
+                title.textContent = 'Log In';
+                confirmPassInput.style.display = 'none';
+                primaryBtn.textContent = 'Log In';
+                switchBtn.textContent = 'Need an account? Create Account';
+            }
+        }
+
+        // Toggle between create account and login modes
+        document.getElementById('account-switch-btn').addEventListener('click', function() {
+            setCreateAccountMode(!isCreateAccountMode);
+            document.getElementById('account-error').textContent = '';
+        });
+
+        // Handle account creation/login
+        document.getElementById('account-primary-btn').addEventListener('click', function() {
+            const username = document.getElementById('account-username').value.trim();
+            const password = document.getElementById('account-password').value;
+            const confirmPassword = document.getElementById('account-confirm-password').value;
+            const errorEl = document.getElementById('account-error');
+            
+            // Validation
+            if (!username) {
+                errorEl.textContent = 'Please enter a username';
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 20) {
+                errorEl.textContent = 'Username must be 3-20 characters';
+                return;
+            }
+            
+            if (!password) {
+                errorEl.textContent = 'Please enter a password';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorEl.textContent = 'Password must be at least 6 characters';
+                return;
+            }
+            
+            if (isCreateAccountMode) {
+                // Create account validation
+                if (!confirmPassword) {
+                    errorEl.textContent = 'Please confirm your password';
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    errorEl.textContent = 'Passwords do not match';
+                    return;
+                }
+                
+                // Check if username already exists
+                const existingUsers = JSON.parse(localStorage.getItem('cyberspaceUsers') || '{}');
+                if (existingUsers[username.toLowerCase()]) {
+                    errorEl.textContent = 'Username already exists';
+                    return;
+                }
+                
+                // Create new user
+                const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                const newUser = {
+                    id: userId,
+                    username: username,
+                    passwordHash: simpleHash(password), // In production, use proper password hashing
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    stats: {
+                        totalRolls: 0,
+                        illusionaryCount: 0,
+                        bestRoll: null
+                    }
+                };
+                
+                // Save user
+                existingUsers[username.toLowerCase()] = newUser;
+                localStorage.setItem('cyberspaceUsers', JSON.stringify(existingUsers));
+                
+                // Log in the new user
+                loginUser(newUser);
+                showTempNotification('Account created successfully!');
+                
+            } else {
+                // Log in validation
+                const existingUsers = JSON.parse(localStorage.getItem('cyberspaceUsers') || '{}');
+                const userKey = username.toLowerCase();
+                const user = existingUsers[userKey];
+                
+                if (!user) {
+                    errorEl.textContent = 'Username not found';
+                    return;
+                }
+                
+                // Check password (in production, use proper password verification)
+                if (user.passwordHash !== simpleHash(password)) {
+                    errorEl.textContent = 'Invalid password';
+                    return;
+                }
+                
+                // Update last login
+                user.lastLogin = new Date().toISOString();
+                existingUsers[userKey] = user;
+                localStorage.setItem('cyberspaceUsers', JSON.stringify(existingUsers));
+                
+                // Log in the user
+                loginUser(user);
+                showTempNotification('Logged in successfully!');
+            }
+            
+            // Close modal
+            hideAccountModal();
+        });
+
+        // Simple hash function for demo (in production, use proper bcrypt)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash.toString();
+        }
+
+        function loginUser(userData) {
+            currentUser = {
+                id: userData.id,
+                username: userData.username,
+                stats: userData.stats
             };
+            isLoggedIn = true;
             
-            // Create our user object
-            const userData = {
-                username: fakeDiscordUser.username,
-                discriminator: fakeDiscordUser.discriminator,
-                fullUsername: fakeDiscordUser.username + '#' + fakeDiscordUser.discriminator,
-                discordId: fakeDiscordUser.discordId,
-                isGuest: false,
-                avatarUrl: fakeDiscordUser.avatar ? 
-                    `https://cdn.discordapp.com/avatars/${fakeDiscordUser.discordId}/${fakeDiscordUser.avatar}.png` : null,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Save user
-            currentUser = userData;
-            isGuest = false;
-            localStorage.setItem('cyberspaceUser', JSON.stringify(userData));
+            // Save to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('isLoggedIn', 'true');
             
             // Update UI
+            updateAccountButton();
             updateUserDisplay();
-            updateWelcomeBanner();
-            updateAuthButton();
+        }
+
+        function logout() {
+            currentUser = null;
+            isLoggedIn = false;
             
-            showTempNotification(`Welcome, ${userData.username}!`);
+            // Clear from localStorage
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isLoggedIn');
             
-            console.log('Demo Discord user created:', userData);
+            // Update UI
+            updateAccountButton();
+            updateUserDisplay();
+            
+            showTempNotification('Logged out');
         }
 
-        // ============================================
-        // USER MANAGEMENT FUNCTIONS (UPDATED)
-        // ============================================
-
-        // Load user from localStorage on page load
-        function loadUserFromStorage() {
-            const savedUser = localStorage.getItem('cyberspaceUser');
-            if (savedUser) {
-                const userData = JSON.parse(savedUser);
-                currentUser = userData;
-                isGuest = userData.isGuest;
-                updateUserDisplay();
-                updateWelcomeBanner();
-                updateAuthButton(); // Update the button based on saved user state
-            }
-        }
-
-        // Update the welcome banner in the main menu
-        function updateWelcomeBanner() {
-            const welcomeText = document.getElementById('welcome-text');
-            const avatarContainer = document.getElementById('user-avatar-container');
-
-            if (currentUser) {
-                if (!isGuest && currentUser.username) {
-                    // Show Discord username
-                    if (currentUser.discriminator) {
-                        welcomeText.textContent = `Welcome, ${currentUser.username}!`;
-                    } else {
-                        welcomeText.textContent = `Welcome, ${currentUser.username}!`;
-                    }
-                } else {
-                    // Show Guest
-                    welcomeText.textContent = `Welcome to Cyberspace Luck Simulator!`;
-                }
-
-                // Display avatar or placeholder
-                avatarContainer.innerHTML = '';
-                if (!isGuest && currentUser.avatarUrl) {
-                    // If we have a real avatar URL from Discord
-                    const avatarImg = document.createElement('img');
-                    avatarImg.src = currentUser.avatarUrl;
-                    avatarImg.alt = `${currentUser.username}'s avatar`;
-                    avatarImg.className = 'user-avatar';
-                    avatarContainer.appendChild(avatarImg);
-                } else {
-                    // Show a placeholder (Guest or no avatar)
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'avatar-placeholder';
-                    if (!isGuest && currentUser.username) {
-                        // Use first letter of Discord username
-                        placeholder.textContent = currentUser.username.charAt(0).toUpperCase();
-                    } else {
-                        // Default icon
-                        placeholder.textContent = '🎮';
-                    }
-                    avatarContainer.appendChild(placeholder);
-                }
+        function updateAccountButton() {
+            const accountBtn = document.getElementById('account-button');
+            const accountBtnText = document.getElementById('account-button-text');
+            const accountIcon = document.getElementById('account-icon');
+            
+            if (isLoggedIn && currentUser) {
+                // User is logged in - show "Logged in as (username)"
+                accountBtnText.textContent = `Logged in as ${currentUser.username}`;
+                accountIcon.textContent = '✓';
+                accountBtn.classList.add('logged-in');
+                accountBtn.title = 'Click to log out';
             } else {
-                // Default welcome message
-                welcomeText.textContent = 'Welcome to Cyberspace Luck Simulator!';
-                avatarContainer.innerHTML = '<div class="avatar-placeholder">🎮</div>';
-            }
-        }
-
-        // UPDATED: Update the authentication button based on current user state
-        function updateAuthButton() {
-            const authButton = document.getElementById('discord-auth-button');
-            const authButtonText = document.getElementById('auth-button-text');
-            const discordIcon = document.getElementById('discord-icon');
-
-            if (currentUser && !isGuest) {
-                // User is signed in with Discord - show "Logged in as (username)"
-                const displayName = currentUser.username || 'Discord User';
-                authButtonText.textContent = `Logged in as ${displayName}`;
-                discordIcon.textContent = '✓';
-                authButton.classList.remove('guest-mode');
-                authButton.title = 'Click to switch to guest mode';
-            } else if (currentUser && isGuest) {
-                // User is playing as guest - show "Sign in"
-                authButtonText.textContent = 'Sign in with Discord';
-                discordIcon.textContent = '🅭';
-                authButton.classList.remove('guest-mode');
-                authButton.title = 'Sign in with Discord to save progress';
-            } else {
-                // No user saved yet (default state) - show "Sign in"
-                authButtonText.textContent = 'Sign in with Discord';
-                discordIcon.textContent = '🅭';
-                authButton.classList.remove('guest-mode');
-                authButton.title = 'Sign in with Discord to save progress';
+                // User is not logged in - show "Create Account / Log In"
+                accountBtnText.textContent = 'Create Account / Log In';
+                accountIcon.textContent = '👤';
+                accountBtn.classList.remove('logged-in');
+                accountBtn.title = 'Create account or log in';
             }
         }
 
         function updateUserDisplay() {
             const displayElement = document.getElementById('current-user-display');
             if (displayElement) {
-                if (currentUser && !isGuest) {
+                if (isLoggedIn && currentUser) {
                     displayElement.textContent = `Logged in as ${currentUser.username}`;
                 } else {
-                    displayElement.textContent = 'Not signed in';
+                    displayElement.textContent = 'Not logged in';
                 }
             }
         }
 
-        // Toggle between guest mode and Discord sign in
-        function toggleAuthMode() {
-            if (currentUser && !isGuest) {
-                // Currently signed in with Discord, switch to guest
-                playAsGuest();
-            } else {
-                // Currently guest or no user, switch to Discord
-                loginWithDiscord();
+        // Load user from localStorage on page load
+        function loadUserFromStorage() {
+            const savedUser = localStorage.getItem('currentUser');
+            const savedLoginState = localStorage.getItem('isLoggedIn');
+            
+            if (savedUser && savedLoginState === 'true') {
+                currentUser = JSON.parse(savedUser);
+                isLoggedIn = true;
+                updateAccountButton();
+                updateUserDisplay();
             }
-        }
-
-        // Play as guest (no authentication)
-        function playAsGuest() {
-            currentUser = { 
-                username: 'Guest', 
-                isGuest: true,
-                timestamp: new Date().toISOString()
-            };
-            isGuest = true;
-            localStorage.setItem('cyberspaceUser', JSON.stringify(currentUser));
-            updateUserDisplay();
-            updateWelcomeBanner();
-            updateAuthButton();
-            
-            showTempNotification('Switched to Guest mode');
-        }
-
-        // Login with Discord (opens popup)
-        function loginWithDiscord() {
-            // Store the current URL to restore later if needed
-            const currentUrl = window.location.href;
-            
-            // Discord OAuth URL
-            const width = 500;
-            const height = 700;
-            const left = (window.screen.width - width) / 2;
-            const top = (window.screen.height - height) / 2;
-            
-            // Open popup
-            discordAuthPopup = window.open(
-                DISCORD_AUTH_URL,
-                'Discord Login',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`
-            );
-            
-            // Check if popup was blocked
-            if (!discordAuthPopup || discordAuthPopup.closed || typeof discordAuthPopup.closed === 'undefined') {
-                alert('Pop-up blocked! Please allow pop-ups for this site to sign in with Discord.');
-                
-                // Alternative: Redirect in same window
-                const useRedirect = confirm('Pop-up blocked. Redirect to Discord in this window instead?');
-                if (useRedirect) {
-                    window.location.href = DISCORD_AUTH_URL;
-                }
-                return;
-            }
-            
-            // Focus the popup
-            discordAuthPopup.focus();
-            
-            // Optional: Check if popup closed without auth
-            const checkPopup = setInterval(() => {
-                if (discordAuthPopup.closed) {
-                    clearInterval(checkPopup);
-                    console.log('Popup closed by user');
-                }
-            }, 1000);
         }
 
         // ============================================
@@ -916,13 +1012,8 @@
             unlocked = true;
         }
 
-        // Start simulator directly (no authentication prompt)
+        // Start simulator
         function startSimulator() {
-            // If no user is saved, default to guest mode
-            if (!currentUser) {
-                playAsGuest();
-            }
-            
             unlockMedia();
             document.getElementById('entry-overlay').style.opacity = '0';
             setTimeout(() => {
@@ -932,7 +1023,6 @@
         }
 
         function showLeaderboard() {
-            // Leaderboard doesn't require authentication prompt
             // Show loading state
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = '<div class="text-center py-20"><div class="text-cyan-400 text-lg mb-4">Loading leaderboard...</div></div>';
@@ -940,7 +1030,6 @@
             document.getElementById('leaderboard-overlay').style.display = 'flex';
             setTimeout(() => {
                 document.getElementById('leaderboard-overlay').style.opacity = '1';
-                // Fetch leaderboard data
                 fetchLeaderboardData();
             }, 10);
         }
@@ -973,7 +1062,6 @@
                 document.getElementById('entry-overlay').style.display = 'flex';
                 setTimeout(() => {
                     document.getElementById('entry-overlay').style.opacity = '1';
-                    // Hide the simulator UI elements
                     document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.remove('ui-hidden'));
                     document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.style.display = 'none');
                 }, 50);
@@ -986,14 +1074,12 @@
 
         async function fetchLeaderboardData() {
             try {
-                // For demo, use localStorage data
                 await new Promise(resolve => setTimeout(resolve, 500));
 
                 // Check if we have any locally stored submissions
                 const localSubmissions = JSON.parse(localStorage.getItem('cyberspaceSubmissions') || '[]');
 
                 if (localSubmissions.length === 0) {
-                    // No data yet
                     leaderboardData = [];
                     renderLeaderboard();
                     return;
@@ -1032,7 +1118,7 @@
                         hits: user.totalHits,
                         userId: user.userId,
                         date: user.latestDate.split('T')[0],
-                        isCurrentUser: (currentUser && !isGuest && currentUser.discordId === user.userId)
+                        isCurrentUser: (currentUser && isLoggedIn && currentUser.id === user.userId)
                     }))
                     .sort((a, b) => a.rolls - b.rolls)
                     .slice(0, 100);
@@ -1056,13 +1142,12 @@
             list.innerHTML = '';
 
             if (leaderboardData.length === 0) {
-                // Show message for empty leaderboard
                 const emptyMessage = document.createElement('div');
                 emptyMessage.className = 'text-center py-20';
                 emptyMessage.innerHTML = `
                     <div class="text-cyan-400 text-lg mb-4">Leaderboard is empty</div>
                     <div class="text-white/50 text-sm">
-                        ${!isGuest ? 'Be the first to roll an illusionary!' : 'Sign in with Discord and roll an illusionary to appear here!'}
+                        ${isLoggedIn ? 'Be the first to roll an illusionary!' : 'Create an account and roll an illusionary to appear here!'}
                     </div>
                 `;
                 list.appendChild(emptyMessage);
@@ -1088,27 +1173,25 @@
 
         function addLogEntry(hitIndex, rollAt) {
             logEntries.push({ index: hitIndex, roll: rollAt.toLocaleString() });
-            // LIMITED TO 4 ENTRIES
             if (logEntries.length > 4) logEntries.shift();
             rollLog.innerHTML = logEntries.map(entry => `<div class="log-entry">#${entry.index} illusionary at ${entry.roll} rolls.</div>`).join('');
 
-            // If user is authenticated with Discord (not guest), submit to leaderboard
-            if (!isGuest && currentUser) {
+            // If user is logged in, submit to leaderboard
+            if (isLoggedIn && currentUser) {
                 submitToLeaderboard(rollAt, hitIndex);
             }
         }
 
         function submitToLeaderboard(rolls, hitIndex) {
-            // Save locally for now
+            // Save locally
             const leaderboardEntry = {
-                userId: currentUser.discordId,
+                userId: currentUser.id,
                 username: currentUser.username,
                 rolls: rolls,
                 hitIndex: hitIndex,
                 timestamp: new Date().toISOString()
             };
 
-            // Save to localStorage
             let submissions = JSON.parse(localStorage.getItem('cyberspaceSubmissions') || '[]');
             submissions.push(leaderboardEntry);
             localStorage.setItem('cyberspaceSubmissions', JSON.stringify(submissions));
@@ -1282,7 +1365,6 @@
 
         // Show a temporary notification
         function showTempNotification(message) {
-            // Create notification element
             const notification = document.createElement('div');
             notification.textContent = message;
             notification.style.cssText = `
@@ -1307,12 +1389,10 @@
             
             document.body.appendChild(notification);
             
-            // Fade in
             setTimeout(() => {
                 notification.style.opacity = '1';
             }, 10);
             
-            // Fade out and remove after 3 seconds
             setTimeout(() => {
                 notification.style.opacity = '0';
                 setTimeout(() => {
@@ -1336,19 +1416,24 @@
         window.addEventListener('mousedown', unlockMedia);
         window.addEventListener('touchstart', unlockMedia);
 
-        // Load user on page load AND update the welcome banner and auth button
-        loadUserFromStorage();
-        updateWelcomeBanner();
-        updateAuthButton();
-        
-        // Check for Discord auth on page load
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        // Initialize when page loads
         window.addEventListener('DOMContentLoaded', function() {
-            checkForDiscordAuth();
+            console.log('Cyberspace Luck Simulator initializing...');
+            
+            // Load saved user
+            loadUserFromStorage();
+            
+            // Update UI
+            updateAccountButton();
+            updateUserDisplay();
+            
+            console.log('Initialization complete');
+            console.log('Current user:', currentUser);
         });
-        
-        console.log('Cyberspace Luck Simulator loaded');
-        console.log('Discord Auth URL:', DISCORD_AUTH_URL);
-        console.log('Current user:', currentUser);
     </script>
 </body>
 </html>
