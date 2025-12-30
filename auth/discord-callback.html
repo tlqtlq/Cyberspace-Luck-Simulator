@@ -3,18 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Authentication - Processing</title>
+    <title>Discord Auth - Redirecting</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            background: linear-gradient(135deg, #01040a 0%, #001a33 100%);
+            background: #01040a;
             color: white;
-            font-family: 'Arial', sans-serif;
+            font-family: monospace;
+            margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,242 +17,74 @@
             text-align: center;
             padding: 20px;
         }
-        
         .container {
-            background: rgba(0, 20, 40, 0.9);
-            border: 2px solid #5865F2;
-            border-radius: 15px;
-            padding: 40px 30px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 0 50px rgba(88, 101, 242, 0.3);
-            animation: pulse 2s infinite;
         }
-        
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 50px rgba(88, 101, 242, 0.3); }
-            50% { box-shadow: 0 0 70px rgba(88, 101, 242, 0.5); }
-        }
-        
-        .logo {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #5865F2;
-        }
-        
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #00f2ff;
-        }
-        
-        .subtitle {
-            font-size: 14px;
-            color: #a0aec0;
-            margin-bottom: 30px;
-        }
-        
         .spinner {
             border: 4px solid rgba(0, 242, 255, 0.1);
             border-top: 4px solid #00f2ff;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 30px;
+            margin: 20px auto;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        
-        .status {
-            font-size: 16px;
-            margin: 20px 0;
-            min-height: 40px;
-        }
-        
-        .error {
-            color: #ff5555;
-            background: rgba(255, 85, 85, 0.1);
-            padding: 10px;
-            border-radius: 5px;
-            margin: 20px 0;
-            border: 1px solid rgba(255, 85, 85, 0.3);
-        }
-        
-        .button {
-            background: #5865F2;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s;
-        }
-        
-        .button:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
-        }
-        
-        .code-display {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            word-break: break-all;
-            margin: 20px 0;
-            color: #a0aec0;
-            border: 1px solid rgba(0, 242, 255, 0.1);
-        }
-        
-        .instructions {
-            font-size: 12px;
-            color: #718096;
-            margin-top: 30px;
-            line-height: 1.5;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">🅭</div>
-        <div class="title">Discord Authentication</div>
-        <div class="subtitle">Cyberspace Luck Simulator</div>
-        
-        <div class="spinner" id="spinner"></div>
-        
-        <div class="status" id="status">Processing authorization...</div>
-        
-        <div id="code-display" class="code-display" style="display: none;"></div>
-        
-        <div id="error-message" class="error" style="display: none;"></div>
-        
-        <button id="close-button" class="button" style="display: none;" onclick="window.close()">Close Window</button>
-        
-        <div class="instructions" id="instructions">
-            This window will close automatically when complete.<br>
-            If it doesn't close, click the button above.
-        </div>
+        <h2>Discord Authentication</h2>
+        <p>Redirecting back to simulator...</p>
+        <div class="spinner"></div>
+        <p id="status">Processing...</p>
     </div>
 
     <script>
-        // Get URL parameters
+        // Get the authorization code from URL
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const error = urlParams.get('error');
-        const errorDescription = urlParams.get('error_description');
         
         const statusEl = document.getElementById('status');
-        const errorEl = document.getElementById('error-message');
-        const spinnerEl = document.getElementById('spinner');
-        const closeBtn = document.getElementById('close-button');
-        const codeDisplay = document.getElementById('code-display');
-        const instructions = document.getElementById('instructions');
         
-        // Debug: Show the code (optional)
-        if (code) {
-            codeDisplay.textContent = `Code: ${code.substring(0, 20)}...`;
-            codeDisplay.style.display = 'block';
-        }
-        
-        function showError(message) {
-            spinnerEl.style.display = 'none';
-            statusEl.style.display = 'none';
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-            closeBtn.style.display = 'block';
-            instructions.textContent = 'Please return to the simulator and try again.';
-        }
-        
-        function showSuccess(message) {
-            statusEl.textContent = message;
-            statusEl.style.color = '#00ff88';
-            spinnerEl.style.borderTopColor = '#00ff88';
-            setTimeout(() => {
-                spinnerEl.style.display = 'none';
-                closeBtn.style.display = 'block';
-                instructions.textContent = 'You can now close this window and return to the simulator.';
-            }, 1000);
-        }
-        
-        // Check for errors first
+        // If there's an error
         if (error) {
-            showError(`Discord Error: ${errorDescription || error}`);
+            statusEl.innerHTML = `Error: ${error}<br>Please return to the simulator.`;
+            setTimeout(() => {
+                window.close();
+            }, 3000);
             return;
         }
         
-        // Check if we have a code
-        if (!code) {
-            showError('No authorization code received. Please try again.');
-            return;
-        }
-        
-        // Try to send the code to the parent window
-        try {
-            // Try multiple times with increasing delays
-            let attempts = 0;
-            const maxAttempts = 10;
+        // If we have a code
+        if (code) {
+            statusEl.textContent = 'Authentication successful!';
             
-            function sendCodeToParent() {
-                attempts++;
-                
-                if (attempts > maxAttempts) {
-                    showError('Cannot connect to simulator. Please return to the main page and try again.');
-                    return;
+            // Store the code in localStorage
+            localStorage.setItem('discordAuthCode', code);
+            localStorage.setItem('discordAuthTime', Date.now());
+            
+            // Redirect back to main page
+            setTimeout(() => {
+                // Try to close the window first
+                try {
+                    window.close();
+                } catch (e) {
+                    // If we can't close, redirect
+                    window.location.href = 'https://tlqtlq.github.io/Cyberspace-Luck-Simulator/';
                 }
-                
-                statusEl.textContent = `Connecting to simulator... (${attempts}/${maxAttempts})`;
-                
-                // Try to send the message
-                if (window.opener && !window.opener.closed) {
-                    // Send the code
-                    window.opener.postMessage({
-                        type: 'DISCORD_AUTH_CODE',
-                        code: code,
-                        timestamp: new Date().toISOString(),
-                        source: 'discord-callback'
-                    }, '*');
-                    
-                    showSuccess('Authentication successful!');
-                    
-                    // Auto-close after 3 seconds
-                    setTimeout(() => {
-                        if (!window.closed) {
-                            window.close();
-                        }
-                    }, 3000);
-                    
-                } else {
-                    // Parent not found, try again in 500ms
-                    setTimeout(sendCodeToParent, 500);
-                }
-            }
-            
-            // Start trying to send
-            sendCodeToParent();
-            
-        } catch (err) {
-            console.error('Error sending message:', err);
-            showError('An error occurred. Please try again.');
+            }, 1500);
+        } else {
+            statusEl.textContent = 'No authorization code received.';
+            setTimeout(() => {
+                window.close();
+            }, 3000);
         }
-        
-        // Add a fallback: if window stays open too long, show close button
-        setTimeout(() => {
-            if (!document.getElementById('close-button').style.display || 
-                document.getElementById('close-button').style.display === 'none') {
-                closeBtn.style.display = 'block';
-                instructions.textContent = 'If authentication completed, you can close this window.';
-            }
-        }, 10000); // Show close button after 10 seconds
     </script>
 </body>
 </html>
