@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Cyberspace Luck Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -54,17 +54,39 @@
         }
 
         #cinematic-overlay {
-            position: fixed; inset: 0; background: black; z-index: 500;
-            display: none; opacity: 0; transition: opacity 0.4s ease-in-out; cursor: pointer;
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black; 
+            z-index: 500;
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.4s ease-in-out; 
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #cinematic-video { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%; 
+            min-height: 100%; 
+            width: auto;
+            height: auto;
+            object-fit: cover; 
+            background-color: black; 
+            pointer-events: none; 
         }
 
         #skip-hint {
-            position: absolute; top: 25%; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
             color: rgba(255, 255, 255, 0.4); font-size: 14px; text-transform: uppercase;
-            letter-spacing: 0.2em; pointer-events: none;
+            letter-spacing: 0.2em; pointer-events: none; z-index: 510;
         }
-
-        #cinematic-video { width: 100%; height: 100%; object-fit: cover; background-color: black; pointer-events: none; }
 
         .cyber-grid-container {
             position: absolute; inset: 0; perspective: 1000px; overflow: hidden; z-index: 0;
@@ -213,7 +235,7 @@
                 <div class="text-[8px] md:text-[10px] text-cyan-400/50 hud-label mb-0.5">rolls</div>
                 <div id="rolls-display" class="text-lg md:text-3xl font-black text-white leading-tight">0</div>
             </div>
-            <!-- Chronological Log -->
+            <!-- Chronological Log (Limited to 4 entries) -->
             <div id="roll-log"></div>
         </div>
         <div class="flex flex-col items-center justify-center -mt-1">
@@ -327,7 +349,8 @@
 
         function addLogEntry(hitIndex, rollAt) {
             logEntries.push({ index: hitIndex, roll: rollAt.toLocaleString() });
-            if (logEntries.length > 10) logEntries.shift();
+            // LIMITED TO 4 ENTRIES
+            if (logEntries.length > 4) logEntries.shift();
             rollLog.innerHTML = logEntries.map(entry => `<div class="log-entry">#${entry.index} illusionary at ${entry.roll} rolls.</div>`).join('');
         }
 
