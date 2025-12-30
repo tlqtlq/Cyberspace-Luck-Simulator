@@ -635,6 +635,7 @@
         // User authentication state
         let currentUser = null;
         let isGuest = true;
+        let discordAuthPopup = null;
 
         // Leaderboard data - Will be fetched from your backend
         let leaderboardData = [];
@@ -653,6 +654,114 @@
 
         illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
+        // ============================================
+        // DISCORD AUTHENTICATION FUNCTIONS
+        // ============================================
+
+        // Handle incoming messages from Discord callback
+        function handleDiscordAuthMessage(event) {
+            // Security check - only accept messages from trusted origins
+            const allowedOrigins = [
+                'https://tlqtlq.github.io',
+                'http://localhost:8000',
+                'http://127.0.0.1:8000',
+                'http://localhost:5500',
+                'http://127.0.0.1:5500'
+            ];
+            
+            if (!allowedOrigins.includes(event.origin)) {
+                console.log('Message from untrusted origin:', event.origin);
+                return;
+            }
+            
+            console.log('Received auth message:', event.data);
+            
+            if (event.data && event.data.type === 'DISCORD_AUTH_CODE') {
+                const code = event.data.code;
+                
+                // Close the popup if it's still open
+                if (discordAuthPopup && !discordAuthPopup.closed) {
+                    discordAuthPopup.close();
+                }
+                
+                // Process the code
+                exchangeDiscordCodeForUserInfo(code);
+            }
+        }
+
+        // Listen for messages from the callback page
+        window.addEventListener('message', handleDiscordAuthMessage, false);
+
+        // Exchange Discord code for user info (requires backend in production)
+        async function exchangeDiscordCodeForUserInfo(code) {
+            console.log('Exchanging Discord code:', code);
+            
+            showTempNotification('Processing Discord login...');
+            
+            try {
+                // FOR DEMO PURPOSES ONLY - Create a mock user
+                // In production, you would send this code to your backend server
+                const mockUser = {
+                    username: 'DiscordUser_' + Math.floor(Math.random() * 10000),
+                    discordId: 'discord_' + Date.now(),
+                    isGuest: false,
+                    avatarUrl: null,
+                    timestamp: new Date().toISOString(),
+                    discriminator: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+                    accentColor: '#5865F2'
+                };
+                
+                // Save user
+                currentUser = mockUser;
+                isGuest = false;
+                localStorage.setItem('cyberspaceUser', JSON.stringify(mockUser));
+                
+                // Update UI
+                updateUserDisplay();
+                updateWelcomeBanner();
+                updateAuthButton();
+                
+                showTempNotification(`Welcome, ${mockUser.username}!`);
+                
+                // Note for future: To get REAL Discord user info, you need a backend server
+                console.log(`
+                ============================================
+                DISCORD AUTH SUCCESSFUL (DEMO MODE)
+                Code: ${code.substring(0, 20)}...
+                
+                For real Discord authentication:
+                1. Set up a backend server (Node.js/Express, Python, etc.)
+                2. Create an endpoint to exchange code for token
+                3. Update this function to call your backend
+                ============================================
+                `);
+                
+            } catch (error) {
+                console.error('Auth error:', error);
+                showTempNotification('Authentication failed. Using demo mode.');
+                
+                // Fallback to demo user
+                const demoUser = {
+                    username: 'DemoUser',
+                    discordId: 'demo_' + Date.now(),
+                    isGuest: false,
+                    avatarUrl: null,
+                    timestamp: new Date().toISOString()
+                };
+                
+                currentUser = demoUser;
+                isGuest = false;
+                localStorage.setItem('cyberspaceUser', JSON.stringify(demoUser));
+                updateUserDisplay();
+                updateWelcomeBanner();
+                updateAuthButton();
+            }
+        }
+
+        // ============================================
+        // USER MANAGEMENT FUNCTIONS
+        // ============================================
+
         // Load user from localStorage on page load
         function loadUserFromStorage() {
             const savedUser = localStorage.getItem('cyberspaceUser');
@@ -662,7 +771,7 @@
                 isGuest = userData.isGuest;
                 updateUserDisplay();
                 updateWelcomeBanner();
-                updateAuthButton(); // Update the button based on saved user state
+                updateAuthButton();
             }
         }
 
@@ -774,9 +883,54 @@
             updateWelcomeBanner();
             updateAuthButton();
             
-            // Optional: Show a brief confirmation
             showTempNotification('Switched to Guest mode');
         }
+
+        // Login with Discord (opens popup)
+        function loginWithDiscord() {
+            // Store the current URL to restore later if needed
+            const currentUrl = window.location.href;
+            
+            // Discord OAuth URL
+            const width = 500;
+            const height = 700;
+            const left = (window.screen.width - width) / 2;
+            const top = (window.screen.height - height) / 2;
+            
+            // Open popup
+            discordAuthPopup = window.open(
+                DISCORD_AUTH_URL,
+                'Discord Login',
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`
+            );
+            
+            // Check if popup was blocked
+            if (!discordAuthPopup || discordAuthPopup.closed || typeof discordAuthPopup.closed === 'undefined') {
+                alert('Pop-up blocked! Please allow pop-ups for this site to sign in with Discord.');
+                
+                // Alternative: Redirect in same window
+                const useRedirect = confirm('Pop-up blocked. Redirect to Discord in this window instead?');
+                if (useRedirect) {
+                    window.location.href = DISCORD_AUTH_URL;
+                }
+                return;
+            }
+            
+            // Focus the popup
+            discordAuthPopup.focus();
+            
+            // Optional: Check if popup closed without auth
+            const checkPopup = setInterval(() => {
+                if (discordAuthPopup.closed) {
+                    clearInterval(checkPopup);
+                    console.log('Popup closed by user');
+                }
+            }, 1000);
+        }
+
+        // ============================================
+        // CORE SIMULATOR FUNCTIONS
+        // ============================================
 
         async function unlockMedia() {
             if (unlocked) return;
@@ -800,102 +954,6 @@
                 document.getElementById('entry-overlay').style.display = 'none';
                 bgm.play().catch(() => {});
             }, 500);
-        }
-
-        function loginWithDiscord() {
-            // Redirect to Discord OAuth2 authorization page in a popup
-            const width = 500;
-            const height = 700;
-            const left = (window.screen.width - width) / 2;
-            const top = (window.screen.height - height) / 2;
-
-            const popup = window.open(
-                DISCORD_AUTH_URL,
-                'Discord Login',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`
-            );
-
-            // Check for popup block
-            if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-                alert('Pop-up blocked! Please allow pop-ups for this site to sign in with Discord.');
-                return;
-            }
-
-            // Set up message listener for popup callback
-            const messageListener = function(event) {
-                // Check origin for security
-                if (event.data && event.data.type === 'DISCORD_AUTH_COMPLETE') {
-                    const userData = event.data.user;
-                    currentUser = userData;
-                    isGuest = false;
-                    localStorage.setItem('cyberspaceUser', JSON.stringify(userData));
-                    updateUserDisplay();
-                    updateWelcomeBanner();
-                    updateAuthButton();
-
-                    // Clean up listener
-                    window.removeEventListener('message', messageListener);
-
-                    // Close popup
-                    if (popup && !popup.closed) {
-                        popup.close();
-                    }
-                    
-                    // Show confirmation
-                    showTempNotification(`Welcome, ${userData.username}!`);
-                }
-            };
-
-            window.addEventListener('message', messageListener, false);
-
-            // Fallback check for popup closing
-            const checkPopup = setInterval(function() {
-                if (popup.closed) {
-                    clearInterval(checkPopup);
-                    window.removeEventListener('message', messageListener);
-                }
-            }, 500);
-        }
-
-        // Show a temporary notification
-        function showTempNotification(message) {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0, 20, 40, 0.9);
-                color: #00f2ff;
-                padding: 12px 24px;
-                border-radius: 5px;
-                border: 1px solid #00f2ff;
-                box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
-                font-family: 'Orbitron', sans-serif;
-                font-weight: 900;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Fade in
-            setTimeout(() => {
-                notification.style.opacity = '1';
-            }, 10);
-            
-            // Fade out and remove after 3 seconds
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
         }
 
         function showLeaderboard() {
@@ -954,8 +1012,6 @@
         async function fetchLeaderboardData() {
             try {
                 // For demo, use localStorage data
-                // In production, fetch from your backend: fetch('https://your-backend.com/api/leaderboard')
-
                 await new Promise(resolve => setTimeout(resolve, 500));
 
                 // Check if we have any locally stored submissions
@@ -1249,6 +1305,47 @@
             document.getElementById('rolls-display').innerText = "0"; document.getElementById('hits-display').innerText = "0"; clearDisplay();
         }
 
+        // Show a temporary notification
+        function showTempNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 20, 40, 0.9);
+                color: #00f2ff;
+                padding: 12px 24px;
+                border-radius: 5px;
+                border: 1px solid #00f2ff;
+                box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+                font-family: 'Orbitron', sans-serif;
+                font-weight: 900;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Fade in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Fade out and remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
         window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'r') resetProgress(); });
 
         const container = document.getElementById('grid-container');
@@ -1268,6 +1365,11 @@
         loadUserFromStorage();
         updateWelcomeBanner();
         updateAuthButton();
+        
+        // Debug info
+        console.log('Cyberspace Luck Simulator loaded');
+        console.log('Discord Auth URL:', DISCORD_AUTH_URL);
+        console.log('Current user:', currentUser);
     </script>
 </body>
 </html>
