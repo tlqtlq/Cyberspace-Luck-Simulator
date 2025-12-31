@@ -10,7 +10,7 @@
 
         :root {
             --cyber-blue: #0088ff;
-            --cyber-bg: #01040a;
+            --cyber-bg: #01040a; 
             --navy-relic: #001a4d;
             --navy-glow: rgba(0, 43, 128, 0.8);
             --relic-blue: #001f5e;
@@ -19,6 +19,7 @@
             --neon-glow: #00f2ff;
         }
 
+        /* Fixed UI Scaling for all devices (Targeting 60% of standard mobile size) */
         html {
             font-size: 14px;
         }
@@ -37,17 +38,21 @@
             position: fixed;
         }
 
+        /* Force UI to scale down on smaller screens to match requested 60% look */
         @media (max-width: 1024px) {
-            #ui-hud, #ui-bottom, #ui-center, #leaderboard-overlay, #account-modal {
+            #ui-hud, #ui-bottom, #ui-center {
                 transform: scale(0.75);
                 transform-origin: center;
-                width: 133.33% !important;
+                width: 133.33% !important; /* Counteract scale to fill width */
                 left: -16.66% !important;
             }
             #ui-hud { transform-origin: top center; top: 0; }
             #ui-bottom { transform-origin: bottom center; bottom: 0; }
-            #leaderboard-overlay, #account-modal { transform-origin: center; }
         }
+
+        video::-webkit-media-controls { display: none !important; }
+        video::-webkit-media-controls-enclosure { display: none !important; }
+        video::-webkit-media-controls-panel { display: none !important; }
 
         #orientation-guard {
             position: fixed; inset: 0; background: #000; z-index: 1000;
@@ -65,115 +70,39 @@
             transition: opacity 0.5s ease; text-align: center; padding: 20px;
         }
 
-        .main-menu-content {
-            margin-top: -40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .welcome-banner {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.8rem;
-            color: #001f5e;
-            text-shadow: 0 0 15px rgba(0, 31, 94, 0.8), 0 0 30px rgba(0, 31, 94, 0.4);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            text-align: center;
-            padding: 0 20px;
-            -webkit-text-stroke: 1px rgba(0, 136, 255, 0.3);
-            paint-order: stroke fill;
-        }
-
-        .account-btn {
-            background: #001a4d;
-            border: 1px solid #002d7a;
-            color: #00f2ff;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            letter-spacing: 0.2em;
-            text-shadow: 0 0 8px rgba(0, 242, 255, 0.7);
-            box-shadow: 0 0 15px rgba(0, 31, 94, 0.4);
-            transition: all 0.2s;
-            cursor: pointer;
-            text-transform: uppercase;
-            width: 320px;
-            max-width: 90%;
-            padding: 16px 10px;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .account-btn:hover {
-            box-shadow: 0 0 30px rgba(0, 31, 94, 0.7);
-            background: #002d7a;
-            border-color: #0044aa;
-            transform: translateY(-2px);
-            color: #ffffff;
-            text-shadow: 0 0 12px #ffffff;
-        }
-
-        .account-btn:active {
-            transform: scale(0.95);
-            background: #001a4d;
-        }
-
-        .account-btn.logged-in {
-            background: #003366;
-            border-color: #00f2ff;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-        }
-
-        .roll-btn {
-            background: #000000; border: 1px solid #ffffff; color: #ffffff;
-            font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.2em;
-            text-shadow: 0 0 8px #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-            transition: all 0.1s; cursor: pointer; text-transform: uppercase;
-            width: 320px;
-            max-width: 90%;
-            padding: 18px 10px;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-
-        .roll-btn:hover { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); background: #111111; border-color: #00f2ff; text-shadow: 0 0 12px #00f2ff; }
-        .roll-btn:active { transform: scale(0.95); background: #ffffff; color: #000000; text-shadow: none; }
-
         #cinematic-overlay {
-            position: fixed;
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: black;
+            background: black; 
             z-index: 500;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.4s ease-in-out;
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.4s ease-in-out; 
             cursor: pointer;
             overflow: hidden;
         }
 
-        #cinematic-video {
+        #cinematic-video { 
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            min-width: 100%;
-            min-height: 100%;
+            min-width: 100%; 
+            min-height: 100%; 
             width: auto;
             height: auto;
-            object-fit: cover;
-            background-color: black;
-            pointer-events: none;
+            object-fit: cover; 
+            background-color: black; 
+            pointer-events: none; 
+        }
+
+        #skip-hint {
+            position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.4); font-size: 14px; text-transform: uppercase;
+            letter-spacing: 0.2em; pointer-events: none; z-index: 510;
         }
 
         .cyber-grid-container {
@@ -184,12 +113,12 @@
 
         .cyber-grid {
             position: absolute; width: 300%; height: 300%; top: -100%; left: -100%;
-            background-image:
+            background-image: 
                 linear-gradient(to right, rgba(0, 242, 255, 0.15) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 242, 255, 0.15) 1px, transparent 1px);
             background-size: 60px 60px;
             transform: rotateX(55deg);
-            animation: grid-scroll 2s linear infinite;
+            animation: grid-scroll 2s linear infinite, grid-glow 4s ease-in-out infinite alternate;
         }
 
         @keyframes grid-scroll {
@@ -197,189 +126,99 @@
             100% { transform: rotateX(55deg) translateY(60px); }
         }
 
+        @keyframes grid-glow {
+            from { filter: drop-shadow(0 0 2px var(--neon-glow)) opacity(0.5); }
+            to { filter: drop-shadow(0 0 8px var(--neon-glow)) opacity(0.8); }
+        }
+
+        .digit {
+            position: absolute; color: #00f2ff; font-family: 'JetBrains Mono', monospace;
+            font-size: 18px; font-weight: bold; pointer-events: none;
+            text-shadow: 0 0 10px #00f2ff; animation: rise 4s linear forwards;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(110vh); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        .illusionary-relic {
+            font-family: 'Roboto Mono', monospace; font-weight: 700; font-style: italic;
+            text-transform: lowercase; color: var(--relic-blue);
+            text-shadow: 0 0 10px #000a20, 0 0 30px var(--relic-blue), 0 0 50px rgba(0, 31, 94, 0.3);
+            letter-spacing: -0.02em; -webkit-text-stroke: 1px rgba(0, 162, 255, 0.4);
+            paint-order: stroke fill;
+        }
+
+        .flicker-char { display: inline-block; transition: color 0.15s ease; }
+        .flicker-white { 
+            color: #ffffff !important; 
+            text-shadow: 0 0 20px #ffffff, 0 0 40px var(--relic-blue) !important;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .roll-btn {
+            background: #000000; border: 1px solid #ffffff; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.2em;
+            text-shadow: 0 0 8px #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transition: all 0.1s; cursor: pointer; text-transform: uppercase;
+        }
+
+        .roll-btn:hover { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); background: #111111; border-color: #00f2ff; text-shadow: 0 0 12px #00f2ff; }
+        .roll-btn:active { transform: scale(0.92); background: #ffffff; color: #000000; text-shadow: none; }
+
+        .potion-node {
+            border: 1px solid #1e293b; transition: all 0.2s ease;
+            background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+            gap: 12px; padding: 10px 14px; width: 100%;
+        }
+
+        .node-warp:hover { border-color: #00ffff; background: var(--warp-theme); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .node-trans:hover { border-color: #ffffaa; background: var(--trans-theme); box-shadow: 0 0 15px rgba(255, 255, 170, 0.2); }
+
+        .auto-btn { background: rgba(0, 0, 0, 0.8); border: 1px solid #334155; transition: all 0.3s; cursor: pointer; }
+        .auto-btn.active { border-color: #22c55e; box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); background: rgba(21, 128, 61, 0.1); }
+
+        .custom-input {
+            background: rgba(0, 10, 30, 0.8); border: 1px solid var(--navy-relic);
+            color: #ffffff; font-family: 'JetBrains Mono', monospace; outline: none; width: 100%;
+        }
+
+        .scanline {
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 255, 0.02) 50%);
+            background-size: 100% 4px; position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5;
+        }
+
+        .hud-label { font-family: 'Inter', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        /* Flash Animations */
+        .glitch-flash { animation: flash 0.15s ease-out; }
+        .trans-flash { animation: flash-yellow 0.15s ease-out; }
+        
+        @keyframes flash { 0% { background: #00f2ff; opacity: 0.3; } 100% { background: transparent; opacity: 0; } }
+        @keyframes flash-yellow { 0% { background: #ffffaa; opacity: 0.4; } 100% { background: transparent; opacity: 0; } }
+
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(0, 242, 255, 0.2); border-radius: 2px; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%;
+            background: #00f2ff; cursor: pointer; margin-top: -4.5px; box-shadow: 0 0 8px #00f2ff;
+        }
+
         .ui-hidden { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.5s ease; }
+        #ui-center { z-index: 550; }
+        .reset-indicator { font-family: 'Inter', sans-serif; font-size: 8px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
 
-        /* Leaderboard Styles */
-        #leaderboard-overlay {
-            position: fixed; inset: 0; background: rgba(1, 4, 10, 0.95); z-index: 700;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease; text-align: center; padding: 20px;
-            backdrop-filter: blur(10px);
+        #roll-log {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255, 255, 255, 0.8);
+            pointer-events: none; z-index: 40; text-transform: uppercase;
+            line-height: 1.6; margin-top: 12px;
         }
-
-        .leaderboard-container {
-            width: 90%; max-width: 800px; height: 80vh;
-            background: rgba(0, 10, 30, 0.9);
-            border: 2px solid rgba(0, 242, 255, 0.3);
-            box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
-            display: flex; flex-direction: column;
-        }
-
-        .leaderboard-header {
-            background: rgba(0, 20, 40, 0.95);
-            border-bottom: 1px solid rgba(0, 242, 255, 0.3);
-            padding: 15px 20px;
-            text-align: center;
-        }
-
-        .leaderboard-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 24px;
-            color: #00f2ff;
-            text-shadow: 0 0 10px #00f2ff;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .leaderboard-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            color: rgba(0, 242, 255, 0.7);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .leaderboard-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .leaderboard-entry {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            margin-bottom: 8px;
-            background: rgba(0, 20, 40, 0.6);
-            border: 1px solid rgba(0, 242, 255, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .entry-rank {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 18px;
-            color: #00f2ff;
-            min-width: 40px;
-        }
-
-        .entry-name {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 400;
-            font-size: 14px;
-            color: #ffffff;
-            flex: 1;
-            text-align: left;
-            padding-left: 20px;
-        }
-
-        .entry-rolls {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 800;
-            font-size: 16px;
-            color: #ffffff;
-            min-width: 120px;
-            text-align: right;
-        }
-
-        /* Account Modal Styles */
-        #account-modal {
-            position: fixed; inset: 0; background: rgba(1, 4, 10, 0.95); z-index: 800;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease; text-align: center; padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .account-container {
-            width: 90%; max-width: 400px;
-            background: rgba(0, 10, 30, 0.95);
-            border: 2px solid rgba(0, 31, 94, 0.5);
-            box-shadow: 0 0 40px rgba(0, 31, 94, 0.3);
-            border-radius: 10px;
-            padding: 30px;
-        }
-
-        .account-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 24px;
-            color: #001f5e;
-            text-shadow: 0 0 10px rgba(0, 31, 94, 0.8);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-        }
-
-        .account-input {
-            width: 100%;
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid #001a4d;
-            color: #00f2ff;
-            font-family: 'JetBrains Mono', monospace;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .account-input:focus {
-            border-color: #00f2ff;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
-        }
-
-        .account-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .account-action-btn {
-            flex: 1;
-            padding: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-
-        .account-action-btn.primary {
-            background: #001a4d;
-            color: #00f2ff;
-            border: 1px solid #002d7a;
-        }
-
-        .account-action-btn.primary:hover {
-            background: #002d7a;
-            box-shadow: 0 0 15px rgba(0, 31, 94, 0.5);
-        }
-
-        .account-action-btn.secondary {
-            background: transparent;
-            color: #a0aec0;
-            border: 1px solid #2d3748;
-        }
-
-        .account-action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: #4a5568;
-        }
-
-        .account-error {
-            color: #ff6b6b;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            margin-top: 10px;
-            min-height: 20px;
-        }
+        .log-entry { opacity: 0; transform: translateY(-3px); animation: log-slide 0.3s forwards; }
+        @keyframes log-slide { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between">
@@ -389,80 +228,22 @@
     </div>
 
     <div id="entry-overlay">
-        <div class="main-menu-content">
-            <!-- Welcome Banner -->
-            <div class="welcome-banner">
-                Welcome to Cyberspace Luck Simulator
-            </div>
-
-            <!-- Main Action Buttons -->
-            <button onclick="startSimulator()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Start Simulator</button>
-            
-            <!-- Account Button -->
-            <button id="account-button" class="account-btn" onclick="toggleAccountMenu()">
-                <span id="account-icon">👤</span>
-                <span id="account-button-text">Create Account / Log In</span>
-            </button>
-            
-            <button onclick="showLeaderboard()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Leaderboard</button>
-            <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold">Made by @tlq_h</p>
-        </div>
-    </div>
-
-    <!-- Account Modal -->
-    <div id="account-modal">
-        <div class="account-container">
-            <div class="account-title" id="account-modal-title">Create Account</div>
-            
-            <input type="text" id="account-username" class="account-input" placeholder="Username" maxlength="20">
-            <input type="password" id="account-password" class="account-input" placeholder="Password">
-            <input type="password" id="account-confirm-password" class="account-input" placeholder="Confirm Password" style="display: none;">
-            
-            <div class="account-error" id="account-error"></div>
-            
-            <div class="account-actions">
-                <button id="account-primary-btn" class="account-action-btn primary">Create Account</button>
-                <button onclick="hideAccountModal()" class="account-action-btn secondary">Cancel</button>
-            </div>
-            
-            <div class="mt-6 pt-6 border-t border-gray-800">
-                <button id="account-switch-btn" class="text-cyan-400 text-sm font-bold tracking-wider uppercase hover:text-cyan-300 transition-colors">
-                    Already have an account? Log In
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="leaderboard-overlay">
-        <div class="leaderboard-container">
-            <div class="leaderboard-header">
-                <div class="leaderboard-title">Leaderboard</div>
-                <div class="leaderboard-subtitle">Lowest rolls to roll illusionary</div>
-                <div class="leaderboard-subtitle" style="font-size: 10px; color: rgba(0, 242, 255, 0.5); margin-top: 5px;">
-                    Status: <span id="current-user-display">Not logged in</span>
-                </div>
-            </div>
-            <div class="leaderboard-list" id="leaderboard-list">
-                <!-- Leaderboard entries will be loaded from server -->
-            </div>
-            <div class="leaderboard-footer">
-                <button onclick="hideLeaderboard()" class="roll-btn px-8 py-3 text-sm">Back to Simulator</button>
-                <div class="leaderboard-note">* Only logged in accounts appear on leaderboard *</div>
-            </div>
-        </div>
+        <button id="start-btn" onclick="startApp()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Test your cyberspace luck</button>
+        <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold">Made by @tlq_h</p>
     </div>
 
     <div id="cinematic-overlay" ondblclick="skipCinematic()">
-        <video id="cinematic-video" playsinline webkit-playsinline muted preload="auto">
+        <video id="cinematic-video" playsinline webkit-playsinline muted preload="auto" x5-video-player-type="h5-page" x5-video-orientation="landscape">
             <source src="https://pomf2.lain.la/f/touuuxy3.mp4" type="video/mp4">
         </video>
         <div id="skip-hint">Double Click to Skip</div>
     </div>
 
     <div id="flash" class="fixed inset-0 pointer-events-none z-[60]"></div>
-
+    
     <div class="cyber-grid-container" id="grid-container">
         <div class="cyber-grid"></div>
+        <div class="scanline"></div>
     </div>
 
     <div id="ui-hud" class="fixed top-0 left-0 w-full grid grid-cols-3 p-2 md:p-4 z-10 items-start">
@@ -471,6 +252,7 @@
                 <div class="text-[8px] md:text-[10px] text-cyan-400/50 hud-label mb-0.5">rolls</div>
                 <div id="rolls-display" class="text-lg md:text-3xl font-black text-white leading-tight">0</div>
             </div>
+            <!-- Chronological Log (Limited to 4 entries) -->
             <div id="roll-log"></div>
         </div>
         <div class="flex flex-col items-center justify-center -mt-1">
@@ -492,22 +274,16 @@
         </div>
     </div>
 
-    <!-- Bottom UI -->
+    <!-- Bottom UI with Aligned Roll Button -->
     <div id="ui-bottom" class="fixed bottom-0 left-0 w-full p-2 md:p-4 z-20 flex items-end justify-between pointer-events-none">
-        <!-- Left Column -->
+        <!-- Left Side Column -->
         <div class="flex flex-col gap-2.5 w-40 md:w-64 pointer-events-auto">
-            <button onclick="returnToHomepage()" class="back-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-            </button>
-
             <button id="cinematic-toggle-btn" onclick="toggleCinematicMode()" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-3.5 w-full mb-0.5">
                 <div class="flex flex-col text-left">
                     <span class="text-[9px] md:text-[14px] font-bold text-white uppercase leading-none">Cutscenes</span>
                     <span id="cine-status" class="text-[7px] md:text-[11px] text-green-400 uppercase leading-none mt-1">On</span>
                 </div>
-                <div id="cine-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500"></div>
+                <div id="cine-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
             </button>
             <button onclick="runSim(2000)" class="potion-node node-warp py-2.5 md:py-4">
                 <img src="https://i.ibb.co/wrdVKqFG/warp.png" class="w-5 h-5 md:w-8 md:h-8 opacity-80">
@@ -525,13 +301,23 @@
             </button>
         </div>
 
-        <!-- Center Roll Button -->
+        <!-- Center: Aligned Roll Button -->
         <div class="flex flex-col items-center pointer-events-auto w-[35%] md:w-auto pb-0.5 md:pb-1">
             <button onclick="runSim(1)" class="roll-btn w-full md:w-auto px-6 md:px-20 h-10 md:h-16 text-sm md:text-2xl">ROLL</button>
         </div>
 
-        <!-- Right Column -->
+        <!-- Right Side Column -->
         <div class="flex flex-col gap-2.5 w-40 md:w-64 pointer-events-auto">
+            <div class="bg-black/60 backdrop-blur-md border-[1px] border-cyan-500/20 p-2 md:p-3 flex flex-col gap-2 rounded-md shadow-[0_0_15_rgba(0,242,255,0.05)]">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[6px] md:text-[9px] text-cyan-400/60 uppercase font-bold w-4">BGM</span>
+                    <input type="range" id="bgm-vol" min="0" max="100" value="50" oninput="updateBGMVolume(this.value)" class="w-full h-1">
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[6px] md:text-[9px] text-cyan-400/60 uppercase font-bold w-4">SFX</span>
+                    <input type="range" id="sfx-vol" min="0" max="100" value="50" oninput="updateSFXVolume(this.value)" class="w-full h-1">
+                </div>
+            </div>
             <button id="auto-roll-btn" onclick="toggleAutoRoll()" class="auto-btn flex items-center justify-between px-3 md:px-5 py-2 md:py-3.5 w-full">
                 <div class="flex flex-col text-left">
                     <span class="text-[9px] md:text-[14px] font-bold text-white uppercase leading-none">Auto Roll</span>
@@ -539,643 +325,230 @@
                 </div>
                 <div id="auto-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700"></div>
             </button>
+            <div class="potion-node bg-black/60 flex-col !items-stretch p-2 md:p-3.5 border-cyan-500/10">
+                <div class="flex gap-2">
+                    <input type="number" id="custom-roll-amount" placeholder="Skips..." class="custom-input p-1.5 text-[9px] md:text-[13px] h-8 md:h-12 px-3">
+                    <button onclick="handleCustomRoll()" class="bg-cyan-500/10 border-[1px] border-cyan-500/30 px-2 text-[8px] md:text-[11px] font-bold leading-tight uppercase hover:bg-cyan-500 hover:text-black transition-colors">SKIP</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Basic game state
         let rolls = 0, hits = 0;
         const ODDS = 10000000;
-        let flickerInterval = null, autoRollInterval = null, isAutoRolling = false, isCinematicPlaying = false, isCinematicEnabled = true, unlocked = false, isShowingIllusionary = false;
+        let flickerInterval = null, autoRollInterval = null, isAutoRolling = false, isCinematicPlaying = false, isCinematicEnabled = true, unlocked = false, isShowingIllusionary = false; 
         let sfxVolume = 0.5, bgmVolume = 0.5;
         let logEntries = [];
-
-        // User state
-        let currentUser = null;
-        let isLoggedIn = false;
-        let isCreateAccountMode = true;
-
-        // Media elements
+        
         const illusionarySFX = new Audio('https://pomf2.lain.la/f/vvei5e1c.mov');
         const bgm = new Audio('https://pomf2.lain.la/f/jfj7608j.ogg');
         const video = document.getElementById('cinematic-video');
+        const cinematicOverlay = document.getElementById('cinematic-overlay');
+        const rollLog = document.getElementById('roll-log');
 
-        // Initialize media
-        illusionarySFX.preload = 'auto';
-        bgm.preload = 'auto';
-        bgm.loop = true;
-
-        // ============================================
-        // PROFANITY FILTER
-        // ============================================
-
-        const profanityFilter = [
-            'fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'pussy',
-            'cock', 'whore', 'slut', 'bastard', 'damn', 'hell',
-            'fck', 'sh1t', 'sh!t', 'f*ck', 'f**k', 'a$$', 'b!tch', 'b1tch',
-            'c*nt', 'd!ck', 'd1ck', 'p*ssy', 'c*ck', 'wh*re', 'sl*t',
-            'nigger', 'nigga', 'fag', 'faggot', 'retard', 'spic', 'chink',
-            'kike', 'gook', 'wetback'
-        ];
-
-        function containsProfanity(text) {
-            if (!text) return false;
-            const lowerText = text.toLowerCase();
-            for (const word of profanityFilter) {
-                if (lowerText.includes(word)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // ============================================
-        // ACCOUNT SYSTEM
-        // ============================================
-
-        function toggleAccountMenu() {
-            if (isLoggedIn) {
-                logout();
-            } else {
-                showAccountModal();
-            }
-        }
-
-        function showAccountModal() {
-            resetAccountForm();
-            document.getElementById('account-modal').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('account-modal').style.opacity = '1';
-            }, 10);
-        }
-
-        function hideAccountModal() {
-            document.getElementById('account-modal').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('account-modal').style.display = 'none';
-            }, 500);
-        }
-
-        function resetAccountForm() {
-            document.getElementById('account-username').value = '';
-            document.getElementById('account-password').value = '';
-            document.getElementById('account-confirm-password').value = '';
-            document.getElementById('account-error').textContent = '';
-            setCreateAccountMode(true);
-        }
-
-        function setCreateAccountMode(isCreateMode) {
-            isCreateAccountMode = isCreateMode;
-            const title = document.getElementById('account-modal-title');
-            const confirmPassInput = document.getElementById('account-confirm-password');
-            const primaryBtn = document.getElementById('account-primary-btn');
-            const switchBtn = document.getElementById('account-switch-btn');
-            
-            if (isCreateMode) {
-                title.textContent = 'Create Account';
-                confirmPassInput.style.display = 'block';
-                primaryBtn.textContent = 'Create Account';
-                switchBtn.textContent = 'Already have an account? Log In';
-            } else {
-                title.textContent = 'Log In';
-                confirmPassInput.style.display = 'none';
-                primaryBtn.textContent = 'Log In';
-                switchBtn.textContent = 'Need an account? Create Account';
-            }
-        }
-
-        // Event listeners for account modal
-        document.getElementById('account-switch-btn').addEventListener('click', function() {
-            setCreateAccountMode(!isCreateAccountMode);
-            document.getElementById('account-error').textContent = '';
-        });
-
-        document.getElementById('account-primary-btn').addEventListener('click', function() {
-            handleAccountAction();
-        });
-
-        function handleAccountAction() {
-            const username = document.getElementById('account-username').value.trim();
-            const password = document.getElementById('account-password').value;
-            const confirmPassword = document.getElementById('account-confirm-password').value;
-            const errorEl = document.getElementById('account-error');
-            
-            errorEl.textContent = '';
-            
-            // Validation
-            if (!username) {
-                errorEl.textContent = 'Please enter a username';
-                return;
-            }
-            
-            if (username.length < 3 || username.length > 20) {
-                errorEl.textContent = 'Username must be 3-20 characters';
-                return;
-            }
-            
-            if (containsProfanity(username)) {
-                errorEl.textContent = 'Username contains inappropriate content';
-                return;
-            }
-            
-            if (!password) {
-                errorEl.textContent = 'Please enter a password';
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorEl.textContent = 'Password must be at least 6 characters';
-                return;
-            }
-            
-            if (isCreateAccountMode) {
-                if (!confirmPassword) {
-                    errorEl.textContent = 'Please confirm your password';
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    errorEl.textContent = 'Passwords do not match';
-                    return;
-                }
-                
-                // Check if username exists
-                const existingUsers = JSON.parse(localStorage.getItem('cyberspaceUsers') || '{}');
-                if (existingUsers[username.toLowerCase()]) {
-                    errorEl.textContent = 'Username already exists';
-                    return;
-                }
-                
-                // Create user
-                const userId = 'user_' + Date.now();
-                const newUser = {
-                    id: userId,
-                    username: username,
-                    passwordHash: simpleHash(password),
-                    createdAt: new Date().toISOString(),
-                    stats: { totalRolls: 0, illusionaryCount: 0 }
-                };
-                
-                // Save user
-                existingUsers[username.toLowerCase()] = newUser;
-                localStorage.setItem('cyberspaceUsers', JSON.stringify(existingUsers));
-                
-                // Login
-                loginUser(newUser);
-                showNotification('Account created successfully!');
-                
-            } else {
-                // Login
-                const existingUsers = JSON.parse(localStorage.getItem('cyberspaceUsers') || '{}');
-                const userKey = username.toLowerCase();
-                const user = existingUsers[userKey];
-                
-                if (!user) {
-                    errorEl.textContent = 'Username not found';
-                    return;
-                }
-                
-                if (user.passwordHash !== simpleHash(password)) {
-                    errorEl.textContent = 'Invalid password';
-                    return;
-                }
-                
-                loginUser(user);
-                showNotification('Logged in successfully!');
-            }
-            
-            hideAccountModal();
-        }
-
-        function simpleHash(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            return hash.toString();
-        }
-
-        function loginUser(userData) {
-            currentUser = {
-                id: userData.id,
-                username: userData.username,
-                stats: userData.stats
-            };
-            isLoggedIn = true;
-            
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            localStorage.setItem('isLoggedIn', 'true');
-            
-            updateAccountButton();
-            updateUserDisplay();
-        }
-
-        function logout() {
-            currentUser = null;
-            isLoggedIn = false;
-            
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('isLoggedIn');
-            
-            updateAccountButton();
-            updateUserDisplay();
-            
-            showNotification('Logged out');
-        }
-
-        function updateAccountButton() {
-            const accountBtn = document.getElementById('account-button');
-            const accountBtnText = document.getElementById('account-button-text');
-            const accountIcon = document.getElementById('account-icon');
-            
-            if (isLoggedIn && currentUser) {
-                accountBtnText.textContent = `Logged in as ${currentUser.username}`;
-                accountIcon.textContent = '✓';
-                accountBtn.classList.add('logged-in');
-            } else {
-                accountBtnText.textContent = 'Create Account / Log In';
-                accountIcon.textContent = '👤';
-                accountBtn.classList.remove('logged-in');
-            }
-        }
-
-        function updateUserDisplay() {
-            const displayElement = document.getElementById('current-user-display');
-            if (displayElement) {
-                if (isLoggedIn && currentUser) {
-                    displayElement.textContent = `Logged in as ${currentUser.username}`;
-                } else {
-                    displayElement.textContent = 'Not logged in';
-                }
-            }
-        }
-
-        function loadUserFromStorage() {
-            const savedUser = localStorage.getItem('currentUser');
-            const savedLoginState = localStorage.getItem('isLoggedIn');
-            
-            if (savedUser && savedLoginState === 'true') {
-                currentUser = JSON.parse(savedUser);
-                isLoggedIn = true;
-                updateAccountButton();
-                updateUserDisplay();
-            }
-        }
-
-        // ============================================
-        // GAME FUNCTIONS
-        // ============================================
+        illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
         async function unlockMedia() {
             if (unlocked) return;
-            bgm.volume = 0;
-            try {
-                await bgm.play();
-                bgm.pause();
-                bgm.volume = bgmVolume;
-            } catch (e) {}
+            bgm.volume = 0; bgm.play().then(() => { bgm.pause(); bgm.volume = bgmVolume; }).catch(() => {});
+            illusionarySFX.volume = 0; illusionarySFX.play().then(() => { illusionarySFX.pause(); illusionarySFX.currentTime = 0; illusionarySFX.volume = sfxVolume; }).catch(() => {});
+            video.removeAttribute('controls'); video.controls = false; video.muted = true; video.style.display = 'block';
+            try { await video.play(); video.pause(); video.currentTime = 0; } catch (e) {}
             unlocked = true;
         }
 
-        function startSimulator() {
+        function startApp() {
             unlockMedia();
             document.getElementById('entry-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('entry-overlay').style.display = 'none';
-                bgm.play().catch(() => {});
-            }, 500);
-        }
-
-        function showLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '<div class="text-center py-20"><div class="text-cyan-400 text-lg mb-4">Loading leaderboard...</div></div>';
-
-            document.getElementById('leaderboard-overlay').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('leaderboard-overlay').style.opacity = '1';
-                fetchLeaderboardData();
-            }, 10);
-        }
-
-        function hideLeaderboard() {
-            document.getElementById('leaderboard-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('leaderboard-overlay').style.display = 'none';
-            }, 500);
-        }
-
-        async function fetchLeaderboardData() {
-            try {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                const submissions = JSON.parse(localStorage.getItem('cyberspaceSubmissions') || '[]');
-                
-                if (submissions.length === 0) {
-                    renderEmptyLeaderboard();
-                    return;
-                }
-                
-                // Process all submissions
-                const userMap = new Map();
-                submissions.forEach(submission => {
-                    if (!userMap.has(submission.userId)) {
-                        userMap.set(submission.userId, {
-                            username: submission.username,
-                            bestRoll: submission.rolls,
-                            userId: submission.userId
-                        });
-                    } else {
-                        const userData = userMap.get(submission.userId);
-                        if (submission.rolls < userData.bestRoll) {
-                            userData.bestRoll = submission.rolls;
-                        }
-                    }
-                });
-                
-                // Convert to array and sort
-                leaderboardData = Array.from(userMap.values())
-                    .sort((a, b) => a.bestRoll - b.bestRoll)
-                    .slice(0, 100);
-                
-                renderLeaderboard();
-                
-            } catch (error) {
-                console.error('Error:', error);
-                const list = document.getElementById('leaderboard-list');
-                list.innerHTML = '<div class="text-center py-20"><div class="text-red-400 text-lg mb-4">Error loading leaderboard</div></div>';
-            }
-        }
-
-        function renderEmptyLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = `
-                <div class="text-center py-20">
-                    <div class="text-cyan-400 text-lg mb-4">Leaderboard is empty</div>
-                    <div class="text-white/50 text-sm">
-                        ${isLoggedIn ? 'Be the first to roll an illusionary!' : 'Create an account and roll an illusionary to appear here!'}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '';
-            
-            leaderboardData.forEach((entry, index) => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'leaderboard-entry';
-                const isCurrentUser = currentUser && entry.userId === currentUser.id;
-                
-                if (isCurrentUser) {
-                    entryElement.style.borderColor = 'rgba(0, 242, 255, 0.6)';
-                    entryElement.style.background = 'rgba(0, 40, 80, 0.8)';
-                }
-                
-                entryElement.innerHTML = `
-                    <div class="entry-rank">#${index + 1}</div>
-                    <div class="entry-name">${entry.username} ${isCurrentUser ? ' (You)' : ''}</div>
-                    <div class="entry-rolls">${entry.bestRoll.toLocaleString()}</div>
-                `;
-                list.appendChild(entryElement);
-            });
+            setTimeout(() => { document.getElementById('entry-overlay').style.display = 'none'; bgm.play().catch(() => {}); }, 500);
         }
 
         function addLogEntry(hitIndex, rollAt) {
             logEntries.push({ index: hitIndex, roll: rollAt.toLocaleString() });
+            // LIMITED TO 4 ENTRIES
             if (logEntries.length > 4) logEntries.shift();
-            
-            const rollLog = document.getElementById('roll-log');
-            rollLog.innerHTML = logEntries.map(entry => 
-                `<div class="log-entry">#${entry.index} illusionary at ${entry.roll} rolls.</div>`
-            ).join('');
-            
-            if (isLoggedIn && currentUser) {
-                submitToLeaderboard(rollAt, hitIndex);
-            }
-        }
-
-        function submitToLeaderboard(rolls, hitIndex) {
-            const submission = {
-                userId: currentUser.id,
-                username: currentUser.username,
-                rolls: rolls,
-                hitIndex: hitIndex,
-                timestamp: new Date().toISOString()
-            };
-            
-            const submissions = JSON.parse(localStorage.getItem('cyberspaceSubmissions') || '[]');
-            submissions.push(submission);
-            localStorage.setItem('cyberspaceSubmissions', JSON.stringify(submissions));
-            
-            // Refresh leaderboard if open
-            if (document.getElementById('leaderboard-overlay').style.display === 'flex') {
-                fetchLeaderboardData();
-            }
-        }
-
-        // Core game functions
-        function runSim(count) {
-            if (isCinematicPlaying) return;
-            if (isShowingIllusionary) clearDisplay();
-            
-            rolls += count;
-            document.getElementById('rolls-display').innerText = rolls.toLocaleString();
-            
-            // Simple chance calculation
-            const hit = Math.random() < (count / ODDS);
-            
-            if (hit) {
-                hits += 1;
-                document.getElementById('hits-display').innerText = hits;
-                addLogEntry(hits, rolls);
-                triggerCinematic();
-            } else {
-                const flash = document.getElementById('flash');
-                flash.style.animation = 'none';
-                setTimeout(() => {
-                    flash.style.animation = 'flash 0.15s ease-out';
-                }, 10);
-            }
-        }
-
-        function triggerCinematic() {
-            if (!isCinematicEnabled) {
-                showIllusionaryTitle();
-                return;
-            }
-            
-            isCinematicPlaying = true;
-            bgm.pause();
-            document.getElementById('cinematic-overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('cinematic-overlay').style.opacity = '1';
-                video.play().catch(() => {
-                    video.onended();
-                });
-            }, 50);
-            
-            video.onended = function() {
-                document.getElementById('cinematic-overlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('cinematic-overlay').style.display = 'none';
-                    isCinematicPlaying = false;
-                    bgm.play().catch(() => {});
-                }, 500);
-                showIllusionaryTitle();
-            };
-        }
-
-        function showIllusionaryTitle() {
-            const mainOutput = document.getElementById('main-output');
-            mainOutput.innerHTML = "illusionary";
-            mainOutput.className = "text-3xl md:text-7xl illusionary-relic w-full";
-            
-            document.getElementById('display-window').style.opacity = '1';
-            document.getElementById('display-window').style.transform = 'scale(1)';
-            
-            illusionarySFX.currentTime = 0;
-            illusionarySFX.play().catch(() => {});
-            
-            isShowingIllusionary = true;
-        }
-
-        function clearDisplay() {
-            document.getElementById('display-window').style.opacity = '0';
-            document.getElementById('display-window').style.transform = 'scale(0.95)';
-            isShowingIllusionary = false;
-        }
-
-        function toggleAutoRoll() {
-            isAutoRolling = !isAutoRolling;
-            const btn = document.getElementById('auto-roll-btn');
-            const status = document.getElementById('auto-status');
-            const led = document.getElementById('auto-led');
-            
-            if (isAutoRolling) {
-                btn.classList.add('active');
-                status.innerText = "Enabled";
-                status.style.color = '#22c55e';
-                led.style.background = '#22c55e';
-                autoRollInterval = setInterval(() => runSim(1), 100);
-            } else {
-                btn.classList.remove('active');
-                status.innerText = "Disabled";
-                status.style.color = 'rgba(255, 255, 255, 0.4)';
-                led.style.background = '#4a5568';
-                clearInterval(autoRollInterval);
-            }
+            rollLog.innerHTML = logEntries.map(entry => `<div class="log-entry">#${entry.index} illusionary at ${entry.roll} rolls.</div>`).join('');
         }
 
         function toggleCinematicMode() {
             isCinematicEnabled = !isCinematicEnabled;
-            const status = document.getElementById('cine-status');
-            const led = document.getElementById('cine-led');
-            
+            const btn = document.getElementById('cinematic-toggle-btn'), status = document.getElementById('cine-status'), led = document.getElementById('cine-led');
             if (isCinematicEnabled) {
-                status.innerText = "On";
-                status.style.color = '#22c55e';
-                led.style.background = '#22c55e';
+                btn.classList.add('active'); status.innerText = "On";
+                status.classList.replace('text-white/40', 'text-green-400');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
             } else {
-                status.innerText = "Off";
-                status.style.color = 'rgba(255, 255, 255, 0.4)';
-                led.style.background = '#4a5568';
+                btn.classList.remove('active'); status.innerText = "Off";
+                status.classList.replace('text-green-400', 'text-white/40');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
             }
         }
 
-        function resetProgress() {
-            rolls = 0;
-            hits = 0;
-            if (isAutoRolling) toggleAutoRoll();
-            logEntries = [];
-            document.getElementById('rolls-display').innerText = "0";
-            document.getElementById('hits-display').innerText = "0";
-            document.getElementById('roll-log').innerHTML = '';
-            clearDisplay();
-        }
+        function skipCinematic() { if (isCinematicPlaying) { video.pause(); video.dispatchEvent(new Event('ended')); } }
 
-        function returnToHomepage() {
-            if (isAutoRolling) toggleAutoRoll();
-            if (isCinematicPlaying) {
-                video.pause();
-                isCinematicPlaying = false;
-                document.getElementById('cinematic-overlay').style.display = 'none';
-            }
-            
-            resetProgress();
-            bgm.pause();
-            bgm.currentTime = 0;
-            
-            document.getElementById('entry-overlay').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('entry-overlay').style.opacity = '1';
-            }, 300);
-        }
-
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0, 20, 40, 0.9);
-                color: #00f2ff;
-                padding: 12px 24px;
-                border-radius: 5px;
-                border: 1px solid #00f2ff;
-                font-family: 'Orbitron', sans-serif;
-                font-weight: 900;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '1';
-            }, 10);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
+        function triggerCinematic() {
+            if (isCinematicPlaying) return;
+            if (!isCinematicEnabled) { showIllusionaryTitle(); return; }
+            isCinematicPlaying = true; bgm.pause();
+            document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.add('ui-hidden'));
+            cinematicOverlay.style.display = 'block';
+            setTimeout(async () => {
+                cinematicOverlay.style.opacity = '1'; video.muted = false; video.volume = sfxVolume; video.currentTime = 0;
+                video.removeAttribute('controls'); video.controls = false;
+                const checkProgress = () => {
+                    if (video.duration - video.currentTime <= 1.111 && video.duration > 0) {
+                        showIllusionaryTitle(); video.removeEventListener('timeupdate', checkProgress);
+                    }
+                };
+                video.addEventListener('timeupdate', checkProgress);
+                try { await video.play(); } catch (err) { video.onended(); }
+            }, 50);
+            video.onended = () => {
+                cinematicOverlay.style.opacity = '0';
                 setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
+                    cinematicOverlay.style.display = 'none';
+                    document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.remove('ui-hidden'));
+                    bgm.play().catch(() => {}); isCinematicPlaying = false;
+                }, 500);
+            };
         }
 
-        // Initialize
-        window.addEventListener('DOMContentLoaded', function() {
-            loadUserFromStorage();
-            updateAccountButton();
-            updateUserDisplay();
-            
-            // Add CSS for flash animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes flash {
-                    0% { background: #00f2ff; opacity: 0.3; }
-                    100% { background: transparent; opacity: 0; }
-                }
-                #flash {
-                    position: fixed;
-                    inset: 0;
-                    pointer-events: none;
-                    z-index: 60;
-                }
-            `;
-            document.head.appendChild(style);
-        });
+        function clearDisplay() {
+            const dw = document.getElementById('display-window'), oc = document.getElementById('odds-container');
+            dw.classList.add('opacity-0', 'scale-95'); dw.classList.remove('opacity-100', 'scale-100');
+            oc.classList.add('opacity-0'); oc.classList.remove('opacity-100');
+            if (flickerInterval) { clearInterval(flickerInterval); flickerInterval = null; }
+            isShowingIllusionary = false;
+        }
 
-        // Keyboard shortcuts
-        window.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() === 'r') resetProgress();
-        });
+        function showIllusionaryTitle() {
+            const mainOutput = document.getElementById('main-output'), oddsContainer = document.getElementById('odds-container'), displayWindow = document.getElementById('display-window');
+            isShowingIllusionary = true;
+            mainOutput.innerHTML = "illusionary".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
+            mainOutput.className = "text-3xl md:text-7xl illusionary-relic w-full";
+            oddsContainer.classList.remove('opacity-0'); oddsContainer.classList.add('opacity-100');
+            if (flickerInterval) clearInterval(flickerInterval);
+            flickerInterval = setInterval(() => {
+                const chars = mainOutput.querySelectorAll('.flicker-char');
+                chars.forEach(c => c.classList.remove('flicker-white'));
+                const rand = Math.floor(Math.random() * chars.length);
+                if (chars[rand]) chars[rand].classList.add('flicker-white');
+            }, 350);
+            displayWindow.className = "opacity-100 transform scale-100 transition-all duration-300 w-full";
+            illusionarySFX.currentTime = 0; illusionarySFX.volume = sfxVolume; illusionarySFX.play().catch(() => {});
+            
+            const flash = document.getElementById('flash'); 
+            flash.classList.remove('glitch-flash', 'trans-flash'); 
+            void flash.offsetWidth; 
+            flash.classList.add('glitch-flash');
+        }
+
+        function getHitCount(n, p) {
+            if (n < 500) {
+                let c = 0; for (let i = 0; i < n; i++) if (Math.random() < p) c++;
+                return c;
+            }
+            const lambda = n * p;
+            if (lambda < 30) {
+                let L = Math.exp(-lambda), k = 0, p_val = 1;
+                do { k++; p_val *= Math.random(); } while (p_val > L);
+                return k - 1;
+            }
+            const stdDev = Math.sqrt(lambda);
+            const u1 = Math.random(), u2 = Math.random();
+            const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+            return Math.max(0, Math.floor(z0 * stdDev + lambda));
+        }
+
+        function runSim(count, potionType = null) {
+            if (isCinematicPlaying && isCinematicEnabled) return;
+            if (isShowingIllusionary) clearDisplay();
+            
+            if (count > 1) {
+                const newHits = getHitCount(count, 1/ODDS);
+                if (newHits > 0) {
+                    let hitRolls = [];
+                    for(let i=0; i<newHits; i++) hitRolls.push(rolls + Math.floor(Math.random() * count));
+                    hitRolls.sort((a,b) => a - b);
+                    
+                    hitRolls.forEach(rollAt => {
+                        hits += 1;
+                        addLogEntry(hits, rollAt);
+                    });
+
+                    rolls += count;
+                    document.getElementById('rolls-display').innerText = rolls.toLocaleString();
+                    document.getElementById('hits-display').innerText = hits.toLocaleString();
+                    triggerCinematic();
+                } else {
+                    rolls += count;
+                    document.getElementById('rolls-display').innerText = rolls.toLocaleString();
+                    const flash = document.getElementById('flash'); 
+                    flash.classList.remove('glitch-flash', 'trans-flash'); 
+                    void flash.offsetWidth; 
+                    flash.classList.add(potionType === 'trans' ? 'trans-flash' : 'glitch-flash');
+                }
+            } else {
+                rolls += 1;
+                document.getElementById('rolls-display').innerText = rolls.toLocaleString();
+                if (Math.random() < 1/ODDS) {
+                    hits += 1;
+                    document.getElementById('hits-display').innerText = hits.toLocaleString();
+                    addLogEntry(hits, rolls);
+                    triggerCinematic();
+                } else if (!isAutoRolling) {
+                    const flash = document.getElementById('flash'); 
+                    flash.classList.remove('glitch-flash', 'trans-flash'); 
+                    void flash.offsetWidth; 
+                    flash.classList.add('glitch-flash');
+                }
+            }
+        }
+
+        function toggleAutoRoll() {
+            isAutoRolling = !isAutoRolling;
+            const btn = document.getElementById('auto-roll-btn'), status = document.getElementById('auto-status'), led = document.getElementById('auto-led');
+            if (isAutoRolling) {
+                btn.classList.add('active'); status.innerText = "Enabled";
+                status.classList.replace('text-white/40', 'text-green-400');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
+                autoRollInterval = setInterval(() => runSim(1), 50);
+            } else {
+                btn.classList.remove('active'); status.innerText = "Disabled";
+                status.classList.replace('text-green-400', 'text-white/40');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                clearInterval(autoRollInterval);
+            }
+        }
+
+        function handleCustomRoll() {
+            let val = parseInt(document.getElementById('custom-roll-amount').value);
+            if (!isNaN(val) && val > 0) runSim(Math.min(val, 150000000));
+        }
+
+        function updateSFXVolume(v) { sfxVolume = v/100; illusionarySFX.volume = sfxVolume; video.volume = sfxVolume; }
+        function updateBGMVolume(v) { bgmVolume = v/100; bgm.volume = bgmVolume; }
+        function resetProgress() {
+            rolls = 0; hits = 0; if (isAutoRolling) toggleAutoRoll();
+            logEntries = []; rollLog.innerHTML = '';
+            document.getElementById('rolls-display').innerText = "0"; document.getElementById('hits-display').innerText = "0"; clearDisplay();
+        }
+
+        window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'r') resetProgress(); });
+
+        const container = document.getElementById('grid-container');
+        setInterval(() => {
+            if (document.hidden || isCinematicPlaying) return;
+            const d = document.createElement('div');
+            d.className = 'digit'; d.innerText = Math.round(Math.random());
+            d.style.left = Math.random() * 100 + 'vw';
+            container.appendChild(d);
+            setTimeout(() => d.remove(), 4000);
+        }, 150);
+
+        window.addEventListener('mousedown', unlockMedia);
+        window.addEventListener('touchstart', unlockMedia);
     </script>
 </body>
 </html>
