@@ -6,11 +6,10 @@
     <title>Cyberspace Luck Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@400;700;900&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;800&family=Roboto+Mono:ital,wght@0,700;1,700&family=Inter:wght@400;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@400;700;900&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;800&family=Roboto+Mono:ital,wght@0,700;1,700&family=Inter:wght@400;700&family=Josefin+Sans:wght@400;700&display=swap');
         :root {
             --cyber-blue: #0088ff;
-            --cyber-bg: #01040a; 
+            --cyber-bg: #01040a;
             --navy-relic: #001a4d;
             --navy-glow: rgba(0, 43, 128, 0.8);
             --relic-blue: #001f5e;
@@ -18,12 +17,7 @@
             --trans-theme: rgba(255, 255, 150, 0.15);
             --neon-glow: #00f2ff;
         }
-
-        /* Fixed UI Scaling for all devices (Targeting 60% of standard mobile size) */
-        html {
-            font-size: 14px;
-        }
-
+        html { font-size: 14px; }
         body {
             background-color: var(--cyber-bg);
             color: white;
@@ -37,188 +31,185 @@
             padding: 0;
             position: fixed;
         }
-
-        /* Force UI to scale down on smaller screens to match requested 60% look */
         @media (max-width: 1024px) {
             #ui-hud, #ui-bottom, #ui-center {
                 transform: scale(0.75);
                 transform-origin: center;
-                width: 133.33% !important; /* Counteract scale to fill width */
+                width: 133.33% !important;
                 left: -16.66% !important;
             }
             #ui-hud { transform-origin: top center; top: 0; }
             #ui-bottom { transform-origin: bottom center; bottom: 0; }
         }
-
         video::-webkit-media-controls { display: none !important; }
-        video::-webkit-media-controls-enclosure { display: none !important; }
-        video::-webkit-media-controls-panel { display: none !important; }
-
         #orientation-guard {
             position: fixed; inset: 0; background: #000; z-index: 1000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
-
         @media (max-width: 932px) and (orientation: portrait) {
             #orientation-guard { display: flex; }
         }
-
         #entry-overlay {
             position: fixed; inset: 0; background: black; z-index: 600;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.5s ease; text-align: center; padding: 20px;
         }
-
         #cinematic-overlay {
-            position: fixed; 
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: black; 
-            z-index: 500;
-            display: none; 
-            opacity: 0; 
-            transition: opacity 0.4s ease-in-out; 
-            cursor: pointer;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: black; z-index: 500; display: none; opacity: 0;
+            transition: opacity 0.4s ease-in-out; cursor: pointer; overflow: hidden;
         }
-
-        #cinematic-video { 
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100%; 
-            min-height: 100%; 
-            width: auto;
-            height: auto;
-            object-fit: cover; 
-            background-color: black; 
-            pointer-events: none; 
+        #cinematic-video {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            min-width: 100%; min-height: 100%; width: auto; height: auto;
+            object-fit: cover; background-color: black; pointer-events: none;
         }
-
         #skip-hint {
             position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
             color: rgba(255, 255, 255, 0.4); font-size: 14px; text-transform: uppercase;
             letter-spacing: 0.2em; pointer-events: none; z-index: 510;
         }
-
         .cyber-grid-container {
             position: absolute; inset: 0; perspective: 1000px; overflow: hidden; z-index: 0;
             background: radial-gradient(circle at 50% 50%, #001a33 0%, #01040a 100%);
-            transition: opacity 0.5s ease;
         }
-
         .cyber-grid {
             position: absolute; width: 300%; height: 300%; top: -100%; left: -100%;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(0, 242, 255, 0.15) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 242, 255, 0.15) 1px, transparent 1px);
             background-size: 60px 60px;
             transform: rotateX(55deg);
             animation: grid-scroll 2s linear infinite, grid-glow 4s ease-in-out infinite alternate;
         }
-
         @keyframes grid-scroll {
             0% { transform: rotateX(55deg) translateY(0); }
             100% { transform: rotateX(55deg) translateY(60px); }
         }
-
         @keyframes grid-glow {
             from { filter: drop-shadow(0 0 2px var(--neon-glow)) opacity(0.5); }
             to { filter: drop-shadow(0 0 8px var(--neon-glow)) opacity(0.8); }
         }
-
         .digit {
             position: absolute; color: #00f2ff; font-family: 'JetBrains Mono', monospace;
             font-size: 18px; font-weight: bold; pointer-events: none;
             text-shadow: 0 0 10px #00f2ff; animation: rise 4s linear forwards;
         }
-
         @keyframes rise {
             0% { transform: translateY(110vh); opacity: 0; }
             10% { opacity: 0.7; }
             90% { opacity: 0.7; }
             100% { transform: translateY(-10vh); opacity: 0; }
         }
-
         .illusionary-relic {
             font-family: 'Roboto Mono', monospace; font-weight: 700; font-style: italic;
-            text-transform: lowercase; color: var(--relic-blue);
-            text-shadow: 0 0 10px #000a20, 0 0 30px var(--relic-blue), 0 0 50px rgba(0, 31, 94, 0.3);
+            text-transform: lowercase; color: #ffffff;
+            text-shadow: 0 0 10px #000a20, 0 0 30px var(--cyber-blue), 0 0 50px rgba(0, 136, 255, 0.3);
             letter-spacing: -0.02em; -webkit-text-stroke: 1px rgba(0, 162, 255, 0.4);
             paint-order: stroke fill;
         }
-
-        .flicker-char { display: inline-block; transition: color 0.15s ease; }
-        .flicker-white { 
-            color: #ffffff !important; 
-            text-shadow: 0 0 20px #ffffff, 0 0 40px var(--relic-blue) !important;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8) !important;
+        .meta-relic {
+            font-family: 'Josefin Sans', sans-serif; font-weight: 700;
+            text-transform: lowercase; color: #ffffff;
+            text-shadow: 0 0 12px #ffffff, 0 0 25px var(--cyber-blue);
+            letter-spacing: 0.05em; 
+            -webkit-text-stroke: 1px black;
+            paint-order: stroke fill;
         }
-
+        .flicker-char { display: inline-block; transition: color 0.12s ease; }
+        .flicker-blue {
+            color: var(--cyber-blue) !important;
+            text-shadow: 0 0 20px var(--cyber-blue), 0 0 40px #ffffff !important;
+            -webkit-text-stroke: 1px rgba(0, 136, 255, 0.9) !important;
+        }
         .roll-btn {
             background: #000000; border: 1px solid #ffffff; color: #ffffff;
             font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.2em;
             text-shadow: 0 0 8px #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             transition: all 0.1s; cursor: pointer; text-transform: uppercase;
         }
-
         .roll-btn:hover { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); background: #111111; border-color: #00f2ff; text-shadow: 0 0 12px #00f2ff; }
         .roll-btn:active { transform: scale(0.92); background: #ffffff; color: #000000; text-shadow: none; }
-
         .potion-node {
             border: 1px solid #1e293b; transition: all 0.2s ease;
             background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
             gap: 12px; padding: 10px 14px; width: 100%;
         }
-
         .node-warp:hover { border-color: #00ffff; background: var(--warp-theme); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
         .node-trans:hover { border-color: #ffffaa; background: var(--trans-theme); box-shadow: 0 0 15px rgba(255, 255, 170, 0.2); }
-
         .auto-btn { background: rgba(0, 0, 0, 0.8); border: 1px solid #334155; transition: all 0.3s; cursor: pointer; }
         .auto-btn.active { border-color: #22c55e; box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); background: rgba(21, 128, 61, 0.1); }
-
         .custom-input {
             background: rgba(0, 10, 30, 0.8); border: 1px solid var(--navy-relic);
             color: #ffffff; font-family: 'JetBrains Mono', monospace; outline: none; width: 100%;
         }
-
         .scanline {
             width: 100%; height: 100%;
             background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 255, 0.02) 50%);
             background-size: 100% 4px; position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5;
         }
-
         .hud-label { font-family: 'Inter', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
-        
-        /* Flash Animations */
         .glitch-flash { animation: flash 0.15s ease-out; }
         .trans-flash { animation: flash-yellow 0.15s ease-out; }
-        
         @keyframes flash { 0% { background: #00f2ff; opacity: 0.3; } 100% { background: transparent; opacity: 0; } }
         @keyframes flash-yellow { 0% { background: #ffffaa; opacity: 0.4; } 100% { background: transparent; opacity: 0; } }
-
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(0, 242, 255, 0.2); border-radius: 2px; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%;
             background: #00f2ff; cursor: pointer; margin-top: -4.5px; box-shadow: 0 0 8px #00f2ff;
         }
-
         .ui-hidden { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.5s ease; }
         #ui-center { z-index: 550; }
-        .reset-indicator { font-family: 'Inter', sans-serif; font-size: 8px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
-
         #roll-log {
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255, 255, 255, 0.8);
+            font-family: 'JetBrains Mono', monospace; font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
             pointer-events: none; z-index: 40; text-transform: uppercase;
-            line-height: 1.6; margin-top: 12px;
+            line-height: 1.5; margin-top: 12px;
+            text-align: left;
         }
-        .log-entry { opacity: 0; transform: translateY(-3px); animation: log-slide 0.3s forwards; }
+        .log-entry { 
+            opacity: 0; 
+            transform: translateY(-3px); 
+            animation: log-slide 0.3s forwards;
+            white-space: nowrap;
+            font-size: 9px;
+        }
+        @media (min-width: 768px) {
+            .log-entry { font-size: 11px; white-space: normal; }
+        }
         @keyframes log-slide { to { opacity: 1; transform: translateY(0); } }
+        .odds-white {
+            color: white !important;
+            -webkit-text-stroke: 0px transparent !important;
+            text-shadow: 0 0 5px rgba(255,255,255,0.3);
+        }
+        .meta-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-top: 8px;
+        }
+        .meta-stack-label {
+            font-size: 8px;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+        }
+        .meta-stack-number {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 5px rgba(0,136,255,0.5);
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        @media (min-width: 768px) {
+            .meta-stack-label { font-size: 10px; }
+            .meta-stack-number { font-size: 28px; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between">
@@ -226,19 +217,14 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00f2ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-6 animate-bounce"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
         <p class="text-white text-base md:text-lg font-bold tracking-widest uppercase">Rotate to Landscape</p>
     </div>
-
     <div id="entry-overlay">
         <button id="start-btn" onclick="startApp()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Test your cyberspace luck</button>
         <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold">Made by @tlq_h</p>
     </div>
-
     <div id="cinematic-overlay" ondblclick="skipCinematic()">
-        <video id="cinematic-video" playsinline webkit-playsinline muted preload="auto" x5-video-player-type="h5-page" x5-video-orientation="landscape">
-            <source src="https://pomf2.lain.la/f/touuuxy3.mp4" type="video/mp4">
-        </video>
+        <video id="cinematic-video" playsinline webkit-playsinline muted preload="auto"></video>
         <div id="skip-hint">Double Click to Skip</div>
     </div>
-
     <div id="flash" class="fixed inset-0 pointer-events-none z-[60]"></div>
     
     <div class="cyber-grid-container" id="grid-container">
@@ -252,16 +238,19 @@
                 <div class="text-[8px] md:text-[10px] text-cyan-400/50 hud-label mb-0.5">rolls</div>
                 <div id="rolls-display" class="text-lg md:text-3xl font-black text-white leading-tight">0</div>
             </div>
-            <!-- Chronological Log (Limited to 4 entries) -->
             <div id="roll-log"></div>
         </div>
         <div class="flex flex-col items-center justify-center -mt-1">
             <button onclick="resetProgress()" class="px-6 md:px-12 py-2 md:py-3 bg-black/40 border-[1px] border-red-900/50 text-[9px] md:text-[12px] font-bold text-red-900/80 uppercase tracking-widest hover:bg-red-900 hover:text-white transition-colors">RESET</button>
-            <div class="reset-indicator">Press R to reset</div>
+            <div class="font-sans text-[8px] text-white/50 uppercase tracking-widest mt-1">Press R to reset</div>
         </div>
         <div class="border-r-[2px] border-blue-900/40 pr-3 md:pr-4 text-right bg-black/60 backdrop-blur-md py-1.5 shadow-[0_0_15px_rgba(0,31,94,0.1)]">
             <div class="text-[8px] md:text-[10px] text-blue-400/60 hud-label mb-0.5">illusionary count</div>
-            <div id="hits-display" class="text-lg md:text-3xl font-black text-[#0088ff] drop-shadow-[0_0_8px_rgba(0,136,255,0.5)]">0</div>
+            <div id="hits-display" class="text-lg md:text-3xl font-black text-[#0088ff] drop-shadow-[0_0_8px_rgba(0,136,255,0.5)] leading-none">0</div>
+            <div class="meta-stack">
+                <div class="meta-stack-label">META COUNT</div>
+                <div id="meta-display" class="meta-stack-number">0</div>
+            </div>
         </div>
     </div>
 
@@ -269,21 +258,26 @@
         <div id="display-window" class="opacity-0 transition-all duration-300 transform scale-95 w-full pointer-events-none">
             <div id="main-output" class="text-3xl md:text-7xl w-full"></div>
             <div id="odds-container" class="mt-4 md:mt-8 flex flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-700">
-                <div id="odds-text" class="text-[10px] md:text-2xl font-black text-[#001f5e] tracking-[0.25em] uppercase" style="-webkit-text-stroke: 0.5px rgba(0, 31, 94, 0.3);">1 IN 10,000,000</div>
+                <div id="odds-text" class="text-[10px] md:text-2xl font-black tracking-[0.25em] uppercase odds-white" style="">1 IN 10,000,000</div>
             </div>
         </div>
     </div>
 
-    <!-- Bottom UI with Aligned Roll Button -->
     <div id="ui-bottom" class="fixed bottom-0 left-0 w-full p-2 md:p-4 z-20 flex items-end justify-between pointer-events-none">
-        <!-- Left Side Column -->
-        <div class="flex flex-col gap-2.5 w-40 md:w-64 pointer-events-auto">
-            <button id="cinematic-toggle-btn" onclick="toggleCinematicMode()" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-3.5 w-full mb-0.5">
+        <div class="flex flex-col gap-2 w-40 md:w-64 pointer-events-auto">
+            <button id="cinematic-illusion-btn" onclick="toggleCinematicMode('illusionary')" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
                 <div class="flex flex-col text-left">
-                    <span class="text-[9px] md:text-[14px] font-bold text-white uppercase leading-none">Cutscenes</span>
-                    <span id="cine-status" class="text-[7px] md:text-[11px] text-green-400 uppercase leading-none mt-1">On</span>
+                    <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">ILLUSIONARY CUTSCENE</span>
+                    <span id="cine-illusion-status" class="text-[6px] md:text-[10px] text-green-400 uppercase leading-none mt-1">On</span>
                 </div>
-                <div id="cine-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                <div id="cine-illusion-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+            </button>
+            <button id="cinematic-meta-btn" onclick="toggleCinematicMode('meta')" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
+                <div class="flex flex-col text-left">
+                    <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">META CUTSCENE</span>
+                    <span id="cine-meta-status" class="text-[6px] md:text-[10px] text-green-400 uppercase leading-none mt-1">On</span>
+                </div>
+                <div id="cine-meta-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
             </button>
             <button onclick="runSim(2000)" class="potion-node node-warp py-2.5 md:py-4">
                 <img src="https://i.ibb.co/wrdVKqFG/warp.png" class="w-5 h-5 md:w-8 md:h-8 opacity-80">
@@ -300,13 +294,9 @@
                 </div>
             </button>
         </div>
-
-        <!-- Center: Aligned Roll Button -->
         <div class="flex flex-col items-center pointer-events-auto w-[35%] md:w-auto pb-0.5 md:pb-1">
             <button onclick="runSim(1)" class="roll-btn w-full md:w-auto px-6 md:px-20 h-10 md:h-16 text-sm md:text-2xl">ROLL</button>
         </div>
-
-        <!-- Right Side Column -->
         <div class="flex flex-col gap-2.5 w-40 md:w-64 pointer-events-auto">
             <div class="bg-black/60 backdrop-blur-md border-[1px] border-cyan-500/20 p-2 md:p-3 flex flex-col gap-2 rounded-md shadow-[0_0_15_rgba(0,242,255,0.05)]">
                 <div class="flex items-center gap-1.5">
@@ -335,83 +325,168 @@
     </div>
 
     <script>
-        let rolls = 0, hits = 0;
-        const ODDS = 10000000;
-        let flickerInterval = null, autoRollInterval = null, isAutoRolling = false, isCinematicPlaying = false, isCinematicEnabled = true, unlocked = false, isShowingIllusionary = false; 
+        let rolls = 0, hits = 0, metaHitsCount = 0;
+        const ILLUSIONARY_ODDS = 10000000;
+        const META_ODDS = 10000;
+        let flickerInterval = null, autoRollInterval = null, isAutoRolling = false, isCinematicPlaying = false;
+        let isIllusionaryCinematicEnabled = true, isMetaCinematicEnabled = true;
         let sfxVolume = 0.5, bgmVolume = 0.5;
         let logEntries = [];
+        let pendingAura = null;
+        let isProcessingAura = false;
+        let pendingAuraRollNumber = null;
         
         const illusionarySFX = new Audio('https://pomf2.lain.la/f/vvei5e1c.mov');
-        const bgm = new Audio('https://pomf2.lain.la/f/jfj7608j.ogg');
+        const bgm = new Audio('https://files.catbox.moe/ows91z.mp3');
         const video = document.getElementById('cinematic-video');
         const cinematicOverlay = document.getElementById('cinematic-overlay');
         const rollLog = document.getElementById('roll-log');
-
+        
         illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
         async function unlockMedia() {
             if (unlocked) return;
             bgm.volume = 0; bgm.play().then(() => { bgm.pause(); bgm.volume = bgmVolume; }).catch(() => {});
             illusionarySFX.volume = 0; illusionarySFX.play().then(() => { illusionarySFX.pause(); illusionarySFX.currentTime = 0; illusionarySFX.volume = sfxVolume; }).catch(() => {});
-            video.removeAttribute('controls'); video.controls = false; video.muted = true; video.style.display = 'block';
-            try { await video.play(); video.pause(); video.currentTime = 0; } catch (e) {}
             unlocked = true;
         }
 
         function startApp() {
             unlockMedia();
             document.getElementById('entry-overlay').style.opacity = '0';
-            setTimeout(() => { document.getElementById('entry-overlay').style.display = 'none'; bgm.play().catch(() => {}); }, 500);
+            setTimeout(() => { 
+                document.getElementById('entry-overlay').style.display = 'none'; 
+                bgm.play().catch(() => {}); 
+            }, 500);
         }
 
-        function addLogEntry(hitIndex, rollAt) {
-            logEntries.push({ index: hitIndex, roll: rollAt.toLocaleString() });
-            // LIMITED TO 4 ENTRIES
-            if (logEntries.length > 4) logEntries.shift();
-            rollLog.innerHTML = logEntries.map(entry => `<div class="log-entry">#${entry.index} illusionary at ${entry.roll} rolls.</div>`).join('');
+        function addLogEntry(type, rollAt, serialNumber) {
+            if (type !== 'illusionary') return;
+            // Format: #<serial> ILLUSIONARY AT <rolls> ROLLS
+            const formattedRolls = rollAt.toLocaleString();
+            logEntries.unshift({ serial: serialNumber, roll: formattedRolls });
+            if (logEntries.length > 5) logEntries.pop();
+            rollLog.innerHTML = logEntries.map(entry => 
+                `<div class="log-entry">#${entry.serial} ILLUSIONARY AT ${entry.roll} ROLLS</div>`
+            ).join('');
         }
 
-        function toggleCinematicMode() {
-            isCinematicEnabled = !isCinematicEnabled;
-            const btn = document.getElementById('cinematic-toggle-btn'), status = document.getElementById('cine-status'), led = document.getElementById('cine-led');
-            if (isCinematicEnabled) {
-                btn.classList.add('active'); status.innerText = "On";
-                status.classList.replace('text-white/40', 'text-green-400');
-                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
-            } else {
-                btn.classList.remove('active'); status.innerText = "Off";
-                status.classList.replace('text-green-400', 'text-white/40');
-                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+        function toggleCinematicMode(type) {
+            if (type === 'illusionary') {
+                isIllusionaryCinematicEnabled = !isIllusionaryCinematicEnabled;
+                const btn = document.getElementById('cinematic-illusion-btn');
+                const statusSpan = document.getElementById('cine-illusion-status');
+                const led = document.getElementById('cine-illusion-led');
+                if (isIllusionaryCinematicEnabled) {
+                    btn.classList.add('active');
+                    statusSpan.innerText = "On";
+                    statusSpan.classList.replace('text-white/40', 'text-green-400');
+                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
+                } else {
+                    btn.classList.remove('active');
+                    statusSpan.innerText = "Off";
+                    statusSpan.classList.replace('text-green-400', 'text-white/40');
+                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                }
+            } else if (type === 'meta') {
+                isMetaCinematicEnabled = !isMetaCinematicEnabled;
+                const btn = document.getElementById('cinematic-meta-btn');
+                const statusSpan = document.getElementById('cine-meta-status');
+                const led = document.getElementById('cine-meta-led');
+                if (isMetaCinematicEnabled) {
+                    btn.classList.add('active');
+                    statusSpan.innerText = "On";
+                    statusSpan.classList.replace('text-green-400', 'text-white/40');
+                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
+                } else {
+                    btn.classList.remove('active');
+                    statusSpan.innerText = "Off";
+                    statusSpan.classList.replace('text-green-400', 'text-white/40');
+                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                }
             }
         }
 
         function skipCinematic() { if (isCinematicPlaying) { video.pause(); video.dispatchEvent(new Event('ended')); } }
 
-        function triggerCinematic() {
+        function processAura() {
+            if (pendingAura === null) {
+                isProcessingAura = false;
+                return;
+            }
             if (isCinematicPlaying) return;
-            if (!isCinematicEnabled) { showIllusionaryTitle(); return; }
-            isCinematicPlaying = true; bgm.pause();
+            
+            const aura = pendingAura;
+            const auraRoll = pendingAuraRollNumber;
+            pendingAura = null;
+            pendingAuraRollNumber = null;
+            const isMeta = (aura === 'meta');
+            
+            const cutsceneEnabled = isMeta ? isMetaCinematicEnabled : isIllusionaryCinematicEnabled;
+            
+            if (cutsceneEnabled) {
+                playCutscene(isMeta, auraRoll);
+            } else {
+                showRareTitle(aura);
+                setTimeout(() => processAura(), 500);
+            }
+        }
+        
+        function playCutscene(isMeta, rollNumber) {
+            isCinematicPlaying = true; 
+            bgm.pause();
+            
             document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.add('ui-hidden'));
             cinematicOverlay.style.display = 'block';
+            cinematicOverlay.offsetHeight;
+            
             setTimeout(async () => {
-                cinematicOverlay.style.opacity = '1'; video.muted = false; video.volume = sfxVolume; video.currentTime = 0;
-                video.removeAttribute('controls'); video.controls = false;
-                const checkProgress = () => {
-                    if (video.duration - video.currentTime <= 1.111 && video.duration > 0) {
-                        showIllusionaryTitle(); video.removeEventListener('timeupdate', checkProgress);
+                cinematicOverlay.style.opacity = '1'; 
+                video.muted = false; 
+                video.volume = sfxVolume; 
+                
+                const metaUrl = "https://files.catbox.moe/8ogtw5.mp4";
+                const illusionUrl = "https://files.catbox.moe/zs3y1x.mp4";
+                
+                video.pause();
+                video.currentTime = 0;
+                video.src = isMeta ? metaUrl : illusionUrl;
+                video.load();
+                
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Playback prevented, retrying with mute:", error);
+                        video.muted = true;
+                        video.play().catch(e => console.warn("Still failed:", e));
+                    });
+                }
+                
+                let timeoutId = setTimeout(() => {
+                    if (isCinematicPlaying && (video.duration === 0 || video.readyState < 2)) {
+                        video.dispatchEvent(new Event('ended'));
                     }
+                }, 5000);
+                
+                video.onended = () => {
+                    clearTimeout(timeoutId);
+                    cinematicOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        cinematicOverlay.style.display = 'none';
+                        document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.remove('ui-hidden'));
+                        bgm.play().catch(() => {}); 
+                        isCinematicPlaying = false;
+                        // Show title AFTER cutscene ends
+                        showRareTitle(isMeta ? 'meta' : 'illusionary');
+                        processAura();
+                    }, 500);
                 };
-                video.addEventListener('timeupdate', checkProgress);
-                try { await video.play(); } catch (err) { video.onended(); }
-            }, 50);
-            video.onended = () => {
-                cinematicOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    cinematicOverlay.style.display = 'none';
-                    document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.remove('ui-hidden'));
-                    bgm.play().catch(() => {}); isCinematicPlaying = false;
-                }, 500);
-            };
+                
+                video.onerror = () => {
+                    clearTimeout(timeoutId);
+                    video.dispatchEvent(new Event('ended'));
+                };
+            }, 80);
         }
 
         function clearDisplay() {
@@ -419,29 +494,62 @@
             dw.classList.add('opacity-0', 'scale-95'); dw.classList.remove('opacity-100', 'scale-100');
             oc.classList.add('opacity-0'); oc.classList.remove('opacity-100');
             if (flickerInterval) { clearInterval(flickerInterval); flickerInterval = null; }
-            isShowingIllusionary = false;
+            isShowingRare = false;
         }
 
-        function showIllusionaryTitle() {
-            const mainOutput = document.getElementById('main-output'), oddsContainer = document.getElementById('odds-container'), displayWindow = document.getElementById('display-window');
-            isShowingIllusionary = true;
-            mainOutput.innerHTML = "illusionary".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
-            mainOutput.className = "text-3xl md:text-7xl illusionary-relic w-full";
-            oddsContainer.classList.remove('opacity-0'); oddsContainer.classList.add('opacity-100');
+        let isShowingRare = false;
+        let rareTimeout = null;
+        function showRareTitle(type) {
+            if (isShowingRare) return;
+            isShowingRare = true;
+            
+            const mainOutput = document.getElementById('main-output'), 
+                  displayWindow = document.getElementById('display-window');
+            const oddsEl = document.getElementById('odds-text');
+            
+            if (type === 'meta') {
+                mainOutput.innerHTML = "meta".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
+                mainOutput.className = "text-3xl md:text-7xl meta-relic w-full";
+                oddsEl.innerText = "1 IN 10,000";
+                oddsEl.classList.add('odds-white');
+            } else {
+                mainOutput.innerHTML = "illusionary".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
+                mainOutput.className = "text-3xl md:text-7xl illusionary-relic w-full";
+                oddsEl.innerText = "1 IN 10,000,000";
+                oddsEl.classList.add('odds-white');
+            }
+            
+            document.getElementById('odds-container').classList.remove('opacity-0');
+            document.getElementById('odds-container').classList.add('opacity-100');
+            
             if (flickerInterval) clearInterval(flickerInterval);
             flickerInterval = setInterval(() => {
-                const chars = mainOutput.querySelectorAll('.flicker-char');
-                chars.forEach(c => c.classList.remove('flicker-white'));
-                const rand = Math.floor(Math.random() * chars.length);
-                if (chars[rand]) chars[rand].classList.add('flicker-white');
-            }, 350);
+                if (type === 'meta') {
+                    const chars = mainOutput.querySelectorAll('.flicker-char');
+                    chars.forEach(c => c.classList.remove('flicker-blue'));
+                } else {
+                    const chars = mainOutput.querySelectorAll('.flicker-char');
+                    chars.forEach(c => c.classList.remove('flicker-blue'));
+                    const rand = Math.floor(Math.random() * chars.length);
+                    if (chars[rand]) chars[rand].classList.add('flicker-blue');
+                }
+            }, 280);
+            
             displayWindow.className = "opacity-100 transform scale-100 transition-all duration-300 w-full";
             illusionarySFX.currentTime = 0; illusionarySFX.volume = sfxVolume; illusionarySFX.play().catch(() => {});
             
-            const flash = document.getElementById('flash'); 
-            flash.classList.remove('glitch-flash', 'trans-flash'); 
-            void flash.offsetWidth; 
+            const flash = document.getElementById('flash');
+            flash.classList.remove('glitch-flash', 'trans-flash');
+            void flash.offsetWidth;
             flash.classList.add('glitch-flash');
+            
+            if (rareTimeout) clearTimeout(rareTimeout);
+            rareTimeout = setTimeout(() => {
+                if (isShowingRare) {
+                    clearDisplay();
+                    isShowingRare = false;
+                }
+            }, 4000);
         }
 
         function getHitCount(n, p) {
@@ -462,48 +570,112 @@
         }
 
         function runSim(count, potionType = null) {
-            if (isCinematicPlaying && isCinematicEnabled) return;
-            if (isShowingIllusionary) clearDisplay();
+            if (isCinematicPlaying) return;
             
             if (count > 1) {
-                const newHits = getHitCount(count, 1/ODDS);
-                if (newHits > 0) {
-                    let hitRolls = [];
-                    for(let i=0; i<newHits; i++) hitRolls.push(rolls + Math.floor(Math.random() * count));
-                    hitRolls.sort((a,b) => a - b);
-                    
-                    hitRolls.forEach(rollAt => {
-                        hits += 1;
-                        addLogEntry(hits, rollAt);
-                    });
-
-                    rolls += count;
-                    document.getElementById('rolls-display').innerText = rolls.toLocaleString();
-                    document.getElementById('hits-display').innerText = hits.toLocaleString();
-                    triggerCinematic();
+                const mHits = getHitCount(count, 1/META_ODDS);
+                const iHits = getHitCount(count, 1/ILLUSIONARY_ODDS);
+                
+                // Track illusionary serial for logging
+                let illusionarySerialStart = hits + 1;
+                let metaCountAdded = 0;
+                let illusionaryCountAdded = 0;
+                
+                for(let i = 0; i < mHits; i++) {
+                    metaHitsCount++;
+                    metaCountAdded++;
+                }
+                for(let i = 0; i < iHits; i++) {
+                    hits++;
+                    illusionaryCountAdded++;
+                    const serialNumber = illusionarySerialStart + i;
+                    const rollAt = rolls + Math.floor(Math.random() * count);
+                    addLogEntry('illusionary', rollAt, serialNumber);
+                }
+                
+                rolls += count;
+                updateUI();
+                
+                let topAura = null;
+                let topAuraRoll = null;
+                if (iHits > 0) {
+                    topAura = 'illusionary';
+                    // Find the roll number for the first illusionary in this batch (approx)
+                    topAuraRoll = rolls - count + Math.floor(Math.random() * count);
+                } else if (mHits > 0) {
+                    topAura = 'meta';
+                    topAuraRoll = rolls - count + Math.floor(Math.random() * count);
+                }
+                
+                if (topAura) {
+                    if (isShowingRare) {
+                        clearDisplay();
+                        if (rareTimeout) clearTimeout(rareTimeout);
+                        isShowingRare = false;
+                    }
+                    pendingAura = topAura;
+                    pendingAuraRollNumber = topAuraRoll;
+                    if (!isProcessingAura && !isCinematicPlaying) {
+                        isProcessingAura = true;
+                        processAura();
+                    } else if (!isProcessingAura && isCinematicPlaying) {
+                        isProcessingAura = true;
+                    }
                 } else {
-                    rolls += count;
-                    document.getElementById('rolls-display').innerText = rolls.toLocaleString();
-                    const flash = document.getElementById('flash'); 
-                    flash.classList.remove('glitch-flash', 'trans-flash'); 
-                    void flash.offsetWidth; 
+                    const flash = document.getElementById('flash');
+                    flash.classList.remove('glitch-flash', 'trans-flash');
+                    void flash.offsetWidth;
                     flash.classList.add(potionType === 'trans' ? 'trans-flash' : 'glitch-flash');
                 }
             } else {
-                rolls += 1;
-                document.getElementById('rolls-display').innerText = rolls.toLocaleString();
-                if (Math.random() < 1/ODDS) {
-                    hits += 1;
-                    document.getElementById('hits-display').innerText = hits.toLocaleString();
-                    addLogEntry(hits, rolls);
-                    triggerCinematic();
-                } else if (!isAutoRolling) {
-                    const flash = document.getElementById('flash'); 
-                    flash.classList.remove('glitch-flash', 'trans-flash'); 
-                    void flash.offsetWidth; 
-                    flash.classList.add('glitch-flash');
+                rolls++;
+                let rolledMeta = Math.random() < 1/META_ODDS;
+                let rolledIllusion = !rolledMeta && Math.random() < 1/ILLUSIONARY_ODDS;
+                
+                if (rolledMeta || rolledIllusion) {
+                    if (rolledMeta) {
+                        metaHitsCount++;
+                    }
+                    if (rolledIllusion) {
+                        hits++;
+                        const serialNumber = hits;
+                        addLogEntry('illusionary', rolls, serialNumber);
+                    }
+                    updateUI();
+                    
+                    if (isShowingRare) {
+                        clearDisplay();
+                        if (rareTimeout) clearTimeout(rareTimeout);
+                        isShowingRare = false;
+                    }
+                    
+                    let auraType = rolledIllusion ? 'illusionary' : (rolledMeta ? 'meta' : null);
+                    if (auraType) {
+                        pendingAura = auraType;
+                        pendingAuraRollNumber = rolls;
+                        if (!isProcessingAura && !isCinematicPlaying) {
+                            isProcessingAura = true;
+                            processAura();
+                        } else if (!isProcessingAura && isCinematicPlaying) {
+                            isProcessingAura = true;
+                        }
+                    }
+                } else {
+                    updateUI();
+                    if (!isAutoRolling) {
+                        const flash = document.getElementById('flash');
+                        flash.classList.remove('glitch-flash', 'trans-flash');
+                        void flash.offsetWidth;
+                        flash.classList.add('glitch-flash');
+                    }
                 }
             }
+        }
+
+        function updateUI() {
+            document.getElementById('rolls-display').innerText = rolls.toLocaleString();
+            document.getElementById('hits-display').innerText = hits.toLocaleString();
+            document.getElementById('meta-display').innerText = metaHitsCount.toLocaleString();
         }
 
         function toggleAutoRoll() {
@@ -529,14 +701,35 @@
 
         function updateSFXVolume(v) { sfxVolume = v/100; illusionarySFX.volume = sfxVolume; video.volume = sfxVolume; }
         function updateBGMVolume(v) { bgmVolume = v/100; bgm.volume = bgmVolume; }
+
         function resetProgress() {
-            rolls = 0; hits = 0; if (isAutoRolling) toggleAutoRoll();
+            rolls = 0; hits = 0; metaHitsCount = 0;
+            if (isAutoRolling) toggleAutoRoll();
+            pendingAura = null;
+            pendingAuraRollNumber = null;
+            isProcessingAura = false;
+            if (isCinematicPlaying) {
+                video.pause();
+                video.currentTime = 0;
+                cinematicOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    cinematicOverlay.style.display = 'none';
+                    document.querySelectorAll('#ui-hud, #ui-bottom, #grid-container').forEach(el => el.classList.remove('ui-hidden'));
+                    bgm.play().catch(() => {});
+                    isCinematicPlaying = false;
+                }, 100);
+            }
+            if (isShowingRare) {
+                clearDisplay();
+                if (rareTimeout) clearTimeout(rareTimeout);
+                isShowingRare = false;
+            }
             logEntries = []; rollLog.innerHTML = '';
-            document.getElementById('rolls-display').innerText = "0"; document.getElementById('hits-display').innerText = "0"; clearDisplay();
+            updateUI();
         }
 
         window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'r') resetProgress(); });
-
+        
         const container = document.getElementById('grid-container');
         setInterval(() => {
             if (document.hidden || isCinematicPlaying) return;
@@ -547,8 +740,8 @@
             setTimeout(() => d.remove(), 4000);
         }, 150);
 
+        let unlocked = false;
         window.addEventListener('mousedown', unlockMedia);
-        window.addEventListener('touchstart', unlockMedia);
     </script>
 </body>
 </html>
