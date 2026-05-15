@@ -6,7 +6,7 @@
     <title>Cyberspace Luck Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@400;700;900&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;800&family=Roboto+Mono:ital,wght@0,700;1,700&family=Inter:wght@400;700&family=Josefin+Sans:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@400;700;900&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;800&family=Roboto+Mono:ital,wght@0,700;1,700&family=Inter:wght@400;700&family=Josefin+Sans:wght@400;700&family=Roboto:wght@400;700;900&display=swap');
         :root {
             --cyber-blue: #0088ff;
             --cyber-bg: #01040a;
@@ -159,7 +159,6 @@
         .trans-flash { animation: flash-yellow 0.15s ease-out; }
         @keyframes flash { 0% { background: #00f2ff; opacity: 0.3; } 100% { background: transparent; opacity: 0; } }
         @keyframes flash-yellow { 0% { background: #ffffaa; opacity: 0.4; } 100% { background: transparent; opacity: 0; } }
-        /* Mobile-friendly range inputs */
         input[type=range] { 
             -webkit-appearance: none; 
             background: transparent; 
@@ -183,9 +182,6 @@
             box-shadow: 0 0 12px #00f2ff;
             border: 1px solid white;
         }
-        input[type=range]::-moz-range-track { height: 4px; background: rgba(0, 242, 255, 0.3); border-radius: 4px; }
-        input[type=range]::-moz-range-thumb { height: 18px; width: 18px; border-radius: 50%; background: #00f2ff; cursor: pointer; border: 1px solid white; }
-        input[type=range]::-ms-track { height: 4px; background: transparent; border-color: transparent; color: transparent; }
         .ui-hidden { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.5s ease; }
         #ui-center { z-index: 550; }
         #roll-log {
@@ -206,10 +202,13 @@
             .log-entry { font-size: 11px; white-space: normal; }
         }
         @keyframes log-slide { to { opacity: 1; transform: translateY(0); } }
-        .odds-white {
+        .odds-text {
+            font-family: 'Roboto', sans-serif !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.25em !important;
             color: white !important;
-            -webkit-text-stroke: 0px transparent !important;
             text-shadow: 0 0 5px rgba(255,255,255,0.3);
+            -webkit-text-stroke: 0px transparent !important;
         }
         .meta-stack {
             display: flex;
@@ -236,6 +235,24 @@
             .meta-stack-label { font-size: 10px; }
             .meta-stack-number { font-size: 28px; }
         }
+        /* Larger right-side UI elements */
+        .right-side-btn {
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+            font-size: 13px !important;
+        }
+        .right-side-status {
+            font-size: 9px !important;
+        }
+        .right-side-led {
+            width: 10px !important;
+            height: 10px !important;
+        }
+        @media (min-width: 768px) {
+            .right-side-btn { padding-top: 1rem !important; padding-bottom: 1rem !important; font-size: 15px !important; }
+            .right-side-status { font-size: 11px !important; }
+            .right-side-led { width: 12px !important; height: 12px !important; }
+        }
         .fullscreen-btn {
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #334155;
@@ -243,9 +260,47 @@
             cursor: pointer;
         }
         .fullscreen-btn.active {
-            border-color: #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-            background: rgba(168, 85, 247, 0.1);
+            border-color: #22c55e;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        .illusion-cs-btn.active {
+            background: linear-gradient(135deg, #001133, #003366, #004499);
+            border: 2px solid #001a4d !important;
+            box-shadow: 0 0 15px rgba(0, 100, 200, 0.5);
+        }
+        .meta-cs-btn.active {
+            background: linear-gradient(135deg, #ffffff, #0044ff, #ff0000);
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+        .pole-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #334155;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .pole-btn.active {
+            background: linear-gradient(135deg, #ff69b4, #00bfff, #ffffff);
+            border-color: #ff69b4;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+        .pole-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        @media (min-width: 768px) {
+            .pole-icon { width: 32px; height: 32px; }
+        }
+        .led-white {
+            background-color: #ffffff !important;
+            box-shadow: 0 0 8px #ffffff !important;
+        }
+        .led-gray {
+            background-color: #4a4a4a !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
@@ -255,13 +310,11 @@
         <p class="text-white text-base md:text-lg font-bold tracking-widest uppercase">Rotate to Landscape</p>
     </div>
     
-    <!-- Entry Overlay -->
     <div id="entry-overlay">
         <button id="start-btn" onclick="showFullscreenPrompt()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Test your cyberspace luck</button>
         <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold">Made by @tlq_h</p>
     </div>
     
-    <!-- Fullscreen Prompt -->
     <div id="fullscreen-prompt">
         <div class="bg-black/90 border border-cyan-500/30 p-6 md:p-8 rounded-lg max-w-[90%] md:max-w-md backdrop-blur-lg">
             <h2 class="text-xl md:text-2xl font-bold text-cyan-400 mb-4">Enable Fullscreen?</h2>
@@ -311,26 +364,23 @@
         <div id="display-window" class="opacity-0 transition-all duration-300 transform scale-95 w-full pointer-events-none">
             <div id="main-output" class="text-3xl md:text-7xl w-full"></div>
             <div id="odds-container" class="mt-4 md:mt-8 flex flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-700">
-                <div id="odds-text" class="text-[10px] md:text-2xl font-black tracking-[0.25em] uppercase odds-white" style="">1 IN 10,000,000</div>
+                <div id="odds-text" class="text-[10px] md:text-2xl font-black tracking-[0.25em] uppercase odds-text">1 IN 10,000,000</div>
             </div>
         </div>
     </div>
 
     <div id="ui-bottom" class="fixed bottom-0 left-0 w-full p-2 md:p-4 z-20 flex items-end justify-between pointer-events-none">
+        <!-- LEFT SIDE: Pole button, Warp, Transcendent, Auto Roll, Custom Skip -->
         <div class="flex flex-col gap-2 w-40 md:w-64 pointer-events-auto">
-            <button id="cinematic-illusion-btn" onclick="toggleCinematicMode('illusionary')" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
-                <div class="flex flex-col text-left">
-                    <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">ILLUSIONARY CUTSCENE</span>
-                    <span id="cine-illusion-status" class="text-[6px] md:text-[10px] text-green-400 uppercase leading-none mt-1">On</span>
+            <button id="pole-device-btn" onclick="togglePoleDevice()" class="pole-btn flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
+                <div class="flex items-center gap-2">
+                    <img src="https://files.catbox.moe/axy0dl.jpg" class="pole-icon" alt="pole">
+                    <div class="flex flex-col text-left">
+                        <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">Pole Light Core Device</span>
+                        <span id="pole-status" class="text-[6px] md:text-[10px] text-white/60 uppercase leading-none mt-1">Off</span>
+                    </div>
                 </div>
-                <div id="cine-illusion-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
-            </button>
-            <button id="cinematic-meta-btn" onclick="toggleCinematicMode('meta')" class="auto-btn active flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
-                <div class="flex flex-col text-left">
-                    <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">META CUTSCENE</span>
-                    <span id="cine-meta-status" class="text-[6px] md:text-[10px] text-green-400 uppercase leading-none mt-1">On</span>
-                </div>
-                <div id="cine-meta-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                <div id="pole-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700"></div>
             </button>
             <button onclick="runSim(2000)" class="potion-node node-warp py-2.5 md:py-4">
                 <img src="https://i.ibb.co/wrdVKqFG/warp.png" class="w-5 h-5 md:w-8 md:h-8 opacity-80">
@@ -346,30 +396,6 @@
                     <span class="text-[7px] md:text-[11px] text-yellow-500 leading-none mt-1">20,000 skips</span>
                 </div>
             </button>
-        </div>
-        <div class="flex flex-col items-center pointer-events-auto w-[35%] md:w-auto pb-0.5 md:pb-1">
-            <button onclick="runSim(1)" class="roll-btn w-full md:w-auto px-6 md:px-20 h-10 md:h-16 text-sm md:text-2xl">ROLL</button>
-        </div>
-        <div class="flex flex-col gap-2.5 w-40 md:w-64 pointer-events-auto">
-            <!-- Fullscreen Toggle Button -->
-            <button id="fullscreen-toggle-btn" onclick="toggleFullscreen()" class="fullscreen-btn flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
-                <div class="flex flex-col text-left">
-                    <span class="text-[8px] md:text-[12px] font-bold text-white uppercase leading-none">FULLSCREEN</span>
-                    <span id="fullscreen-status" class="text-[6px] md:text-[10px] text-white/60 uppercase leading-none mt-1">OFF</span>
-                </div>
-                <div id="fullscreen-led" class="w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700"></div>
-            </button>
-            <!-- Sound Controls -->
-            <div class="bg-black/60 backdrop-blur-md border-[1px] border-cyan-500/20 p-2 md:p-3 flex flex-col gap-3 rounded-md shadow-[0_0_15_rgba(0,242,255,0.05)]">
-                <div class="flex items-center gap-2">
-                    <span class="text-[8px] md:text-[10px] text-cyan-400/60 uppercase font-bold w-6">BGM</span>
-                    <input type="range" id="bgm-vol" min="0" max="100" value="50" oninput="updateBGMVolume(this.value)" class="w-full" ontouchstart="" ontouchmove="">
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-[8px] md:text-[10px] text-cyan-400/60 uppercase font-bold w-6">SFX</span>
-                    <input type="range" id="sfx-vol" min="0" max="100" value="50" oninput="updateSFXVolume(this.value)" class="w-full" ontouchstart="" ontouchmove="">
-                </div>
-            </div>
             <button id="auto-roll-btn" onclick="toggleAutoRoll()" class="auto-btn flex items-center justify-between px-3 md:px-5 py-2 md:py-3.5 w-full">
                 <div class="flex flex-col text-left">
                     <span class="text-[9px] md:text-[14px] font-bold text-white uppercase leading-none">Auto Roll</span>
@@ -384,6 +410,45 @@
                 </div>
             </div>
         </div>
+        
+        <div class="flex flex-col items-center pointer-events-auto w-[35%] md:w-auto pb-0.5 md:pb-1">
+            <button onclick="runSim(1)" class="roll-btn w-full md:w-auto px-6 md:px-20 h-10 md:h-16 text-sm md:text-2xl">ROLL</button>
+        </div>
+        
+        <!-- RIGHT SIDE: Larger UI elements -->
+        <div class="flex flex-col gap-2 w-44 md:w-72 pointer-events-auto">
+            <button id="fullscreen-toggle-btn" onclick="toggleFullscreen()" class="fullscreen-btn right-side-btn flex items-center justify-between px-3 md:px-5 py-3 md:py-4 w-full">
+                <div class="flex flex-col text-left">
+                    <span class="text-[9px] md:text-[15px] font-bold text-white uppercase leading-none">FULLSCREEN</span>
+                    <span id="fullscreen-status" class="right-side-status text-[7px] md:text-[11px] text-white/60 uppercase leading-none mt-1">OFF</span>
+                </div>
+                <div id="fullscreen-led" class="right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-slate-700"></div>
+            </button>
+            <button id="cinematic-meta-btn" onclick="toggleCinematicMode('meta')" class="auto-btn meta-cs-btn active right-side-btn flex items-center justify-between px-3 md:px-5 py-3 md:py-4 w-full">
+                <div class="flex flex-col text-left">
+                    <span class="text-[9px] md:text-[15px] font-bold text-white uppercase leading-none">META CUTSCENE</span>
+                    <span id="cine-meta-status" class="right-side-status text-[7px] md:text-[11px] text-white/60 uppercase leading-none mt-1">On</span>
+                </div>
+                <div id="cine-meta-led" class="right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-gray-500"></div>
+            </button>
+            <button id="cinematic-illusion-btn" onclick="toggleCinematicMode('illusionary')" class="auto-btn illusion-cs-btn active right-side-btn flex items-center justify-between px-3 md:px-5 py-3 md:py-4 w-full">
+                <div class="flex flex-col text-left">
+                    <span class="text-[9px] md:text-[15px] font-bold text-white uppercase leading-none">ILLUSIONARY CUTSCENE</span>
+                    <span id="cine-illusion-status" class="right-side-status text-[7px] md:text-[11px] text-white/60 uppercase leading-none mt-1">On</span>
+                </div>
+                <div id="cine-illusion-led" class="right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-gray-500"></div>
+            </button>
+            <div class="bg-black/60 backdrop-blur-md border-[1px] border-cyan-500/20 p-3 md:p-4 flex flex-col gap-3 rounded-md shadow-[0_0_15_rgba(0,242,255,0.05)]">
+                <div class="flex items-center gap-3">
+                    <span class="text-[9px] md:text-[12px] text-cyan-400/60 uppercase font-bold w-7">BGM</span>
+                    <input type="range" id="bgm-vol" min="0" max="100" value="50" oninput="updateBGMVolume(this.value)" class="w-full" ontouchstart="" ontouchmove="">
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-[9px] md:text-[12px] text-cyan-400/60 uppercase font-bold w-7">SFX</span>
+                    <input type="range" id="sfx-vol" min="0" max="100" value="50" oninput="updateSFXVolume(this.value)" class="w-full" ontouchstart="" ontouchmove="">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -392,6 +457,7 @@
         const META_ODDS = 10000;
         let flickerInterval = null, autoRollInterval = null, isAutoRolling = false, isCinematicPlaying = false;
         let isIllusionaryCinematicEnabled = true, isMetaCinematicEnabled = true;
+        let isPoleDeviceEnabled = false;
         let sfxVolume = 0.5, bgmVolume = 0.5;
         let logEntries = [];
         let pendingAura = null;
@@ -407,7 +473,30 @@
         
         illusionarySFX.preload = 'auto'; bgm.preload = 'auto'; bgm.loop = true;
 
-        // Fullscreen functions
+        function applyPoleBonus(originalCount) {
+            if (!isPoleDeviceEnabled) return originalCount;
+            let extraRolls = Math.floor(originalCount / 30) * 5;
+            return originalCount + extraRolls;
+        }
+
+        function togglePoleDevice() {
+            isPoleDeviceEnabled = !isPoleDeviceEnabled;
+            const btn = document.getElementById('pole-device-btn');
+            const statusSpan = document.getElementById('pole-status');
+            const led = document.getElementById('pole-led');
+            if (isPoleDeviceEnabled) {
+                btn.classList.add('active');
+                statusSpan.innerText = "On";
+                statusSpan.classList.replace('text-white/60', 'text-pink-400');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-gradient-to-r from-pink-500 to-blue-500 shadow-[0_0_10px_#ff69b4]";
+            } else {
+                btn.classList.remove('active');
+                statusSpan.innerText = "Off";
+                statusSpan.classList.replace('text-pink-400', 'text-white/60');
+                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+            }
+        }
+
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().then(() => {
@@ -429,13 +518,13 @@
             if (isFullscreen) {
                 btn.classList.add('active');
                 statusSpan.innerText = "ON";
-                statusSpan.classList.replace('text-white/60', 'text-purple-400');
-                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-purple-500 shadow-[0_0_10px_#a855f7]";
+                statusSpan.classList.replace('text-white/60', 'text-green-400');
+                led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
             } else {
                 btn.classList.remove('active');
                 statusSpan.innerText = "OFF";
-                statusSpan.classList.replace('text-purple-400', 'text-white/60');
-                led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                statusSpan.classList.replace('text-green-400', 'text-white/60');
+                led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-slate-700 shadow-none";
             }
         }
         
@@ -498,13 +587,13 @@
                 if (isIllusionaryCinematicEnabled) {
                     btn.classList.add('active');
                     statusSpan.innerText = "On";
-                    statusSpan.classList.replace('text-white/40', 'text-green-400');
-                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
+                    statusSpan.classList.replace('text-white/40', 'text-white/80');
+                    led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]";
                 } else {
                     btn.classList.remove('active');
                     statusSpan.innerText = "Off";
-                    statusSpan.classList.replace('text-green-400', 'text-white/40');
-                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                    statusSpan.classList.replace('text-white/80', 'text-white/40');
+                    led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-gray-500 shadow-none";
                 }
             } else if (type === 'meta') {
                 isMetaCinematicEnabled = !isMetaCinematicEnabled;
@@ -514,13 +603,13 @@
                 if (isMetaCinematicEnabled) {
                     btn.classList.add('active');
                     statusSpan.innerText = "On";
-                    statusSpan.classList.replace('text-green-400', 'text-white/40');
-                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
+                    statusSpan.classList.replace('text-white/40', 'text-white/80');
+                    led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]";
                 } else {
                     btn.classList.remove('active');
                     statusSpan.innerText = "Off";
-                    statusSpan.classList.replace('text-green-400', 'text-white/40');
-                    led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
+                    statusSpan.classList.replace('text-white/80', 'text-white/40');
+                    led.className = "right-side-led w-2.5 md:w-3.5 h-2.5 md:h-3.5 rounded-full bg-gray-500 shadow-none";
                 }
             }
         }
@@ -628,12 +717,12 @@
                 mainOutput.innerHTML = "meta".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
                 mainOutput.className = "text-3xl md:text-7xl meta-relic w-full";
                 oddsEl.innerText = "1 IN 10,000";
-                oddsEl.classList.add('odds-white');
+                oddsEl.classList.add('odds-text');
             } else {
                 mainOutput.innerHTML = "illusionary".split('').map(char => `<span class="flicker-char">${char}</span>`).join('');
                 mainOutput.className = "text-3xl md:text-7xl illusionary-relic w-full";
                 oddsEl.innerText = "1 IN 10,000,000";
-                oddsEl.classList.add('odds-white');
+                oddsEl.classList.add('odds-text');
             }
             
             document.getElementById('odds-container').classList.remove('opacity-0');
@@ -686,8 +775,9 @@
             return Math.max(0, Math.floor(z0 * stdDev + lambda));
         }
 
-        function runSim(count, potionType = null) {
+        function runSim(rawCount, potionType = null) {
             if (isCinematicPlaying) return;
+            let count = applyPoleBonus(rawCount);
             
             if (count > 1) {
                 const mHits = getHitCount(count, 1/META_ODDS);
@@ -791,12 +881,17 @@
                 btn.classList.add('active'); status.innerText = "Enabled";
                 status.classList.replace('text-white/40', 'text-green-400');
                 led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
-                autoRollInterval = setInterval(() => runSim(1), 50);
+                // Fixed consistent speed: 25 rolls per second (40ms interval)
+                if (autoRollInterval) clearInterval(autoRollInterval);
+                autoRollInterval = setInterval(() => runSim(1), 40);
             } else {
                 btn.classList.remove('active'); status.innerText = "Disabled";
                 status.classList.replace('text-green-400', 'text-white/40');
                 led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-slate-700 shadow-none";
-                clearInterval(autoRollInterval);
+                if (autoRollInterval) {
+                    clearInterval(autoRollInterval);
+                    autoRollInterval = null;
+                }
             }
         }
 
