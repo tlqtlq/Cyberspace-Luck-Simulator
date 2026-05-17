@@ -235,24 +235,6 @@
             .meta-stack-label { font-size: 10px; }
             .meta-stack-number { font-size: 28px; }
         }
-        /* Larger right-side UI elements */
-        .right-side-btn {
-            padding-top: 0.75rem !important;
-            padding-bottom: 0.75rem !important;
-            font-size: 13px !important;
-        }
-        .right-side-status {
-            font-size: 9px !important;
-        }
-        .right-side-led {
-            width: 10px !important;
-            height: 10px !important;
-        }
-        @media (min-width: 768px) {
-            .right-side-btn { padding-top: 1rem !important; padding-bottom: 1rem !important; font-size: 15px !important; }
-            .right-side-status { font-size: 11px !important; }
-            .right-side-led { width: 12px !important; height: 12px !important; }
-        }
         .fullscreen-btn {
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #334155;
@@ -302,6 +284,33 @@
             background-color: #4a4a4a !important;
             box-shadow: none !important;
         }
+        .credit-link {
+            font-family: 'Roboto', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+        }
+        .credit-link:hover {
+            color: #ff0000;
+            text-shadow: 0 0 8px rgba(255,0,0,0.5);
+            background: rgba(0,0,0,0.6);
+            transform: scale(1.02);
+        }
+        .youtube-icon {
+            width: 16px;
+            height: 16px;
+            filter: drop-shadow(0 0 2px rgba(255,0,0,0.5));
+        }
+        @media (min-width: 768px) {
+            .youtube-icon { width: 18px; height: 18px; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between">
@@ -312,7 +321,15 @@
     
     <div id="entry-overlay">
         <button id="start-btn" onclick="showFullscreenPrompt()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Test your cyberspace luck</button>
-        <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold">Made by @tlq_h</p>
+        <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold flex items-center justify-center gap-2">
+            Made by 
+            <a href="https://www.youtube.com/@tlq_h" target="_blank" rel="noopener noreferrer" class="credit-link">
+                <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.376.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.376-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                @tlq_h
+            </a>
+        </p>
     </div>
     
     <div id="fullscreen-prompt">
@@ -881,7 +898,6 @@
                 btn.classList.add('active'); status.innerText = "Enabled";
                 status.classList.replace('text-white/40', 'text-green-400');
                 led.className = "w-2 md:w-3 h-2 md:h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]";
-                // Fixed consistent speed: 25 rolls per second (40ms interval)
                 if (autoRollInterval) clearInterval(autoRollInterval);
                 autoRollInterval = setInterval(() => runSim(1), 40);
             } else {
