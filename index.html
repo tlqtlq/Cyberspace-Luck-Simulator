@@ -55,6 +55,27 @@
             position: fixed; inset: 0; background: black; z-index: 600;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.5s ease; text-align: center; padding: 20px;
+            overflow-y: auto;
+        }
+        #entry-overlay-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #entry-overlay-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        #entry-overlay-content::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.5);
+        }
+        #entry-overlay-content::-webkit-scrollbar-thumb {
+            background: #00f2ff;
+            border-radius: 2px;
         }
         #fullscreen-prompt {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 700;
@@ -86,7 +107,6 @@
             border-color: white;
             box-shadow: 0 0 30px rgba(255,255,255,0.2);
         }
-        /* Background image container - replaces grid */
         .cyber-grid-container {
             position: absolute; inset: 0; overflow: hidden; z-index: 0;
             background: #01040a;
@@ -146,9 +166,28 @@
             font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.2em;
             text-shadow: 0 0 8px #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             transition: all 0.1s; cursor: pointer; text-transform: uppercase;
+            padding: 16px 24px;
+            font-size: 14px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            line-height: 1.3;
         }
         .roll-btn:hover { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); background: #111111; border-color: #00f2ff; text-shadow: 0 0 12px #00f2ff; }
         .roll-btn:active { transform: scale(0.92); background: #ffffff; color: #000000; text-shadow: none; }
+        .entry-btn {
+            background: #000000; border: 1px solid #ffffff; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.1em;
+            text-shadow: 0 0 8px #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transition: all 0.1s; cursor: pointer; text-transform: uppercase;
+            padding: 12px 20px;
+            font-size: 13px;
+            width: 100%;
+            max-width: 300px;
+            border-radius: 4px;
+        }
+        .entry-btn:hover { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); background: #111111; border-color: #00f2ff; text-shadow: 0 0 12px #00f2ff; }
+        .entry-btn:active { transform: scale(0.95); background: #ffffff; color: #000000; text-shadow: none; }
         .potion-node {
             border: 1px solid #1e293b; transition: all 0.2s ease;
             background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
@@ -344,7 +383,6 @@
         @media (min-width: 768px) {
             .youtube-icon { width: 18px; height: 18px; }
         }
-        /* Glass overlay for readability */
         .glass-overlay {
             position: absolute;
             inset: 0;
@@ -355,6 +393,225 @@
         #ui-hud, #ui-bottom, #ui-center {
             z-index: 10;
         }
+        /* Selection page styles */
+        #selection-page {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 800;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        #selection-page::-webkit-scrollbar {
+            width: 4px;
+        }
+        #selection-page::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.5);
+        }
+        #selection-page::-webkit-scrollbar-thumb {
+            background: #00f2ff;
+            border-radius: 2px;
+        }
+        .selection-search {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #334155;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            outline: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .selection-search:focus {
+            border-color: #00f2ff;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+        .selection-grid-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+        .selection-grid-page .entry-btn {
+            max-width: none;
+            padding: 16px 20px;
+            font-size: 13px;
+            border-radius: 8px;
+            text-align: center;
+            border: 3px solid rgba(255,255,255,0.15);
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor;
+            -webkit-text-stroke: 1.5px rgba(0,0,0,0.6);
+            paint-order: stroke fill;
+            box-shadow: 0 0 25px rgba(255,255,255,0.05), inset 0 0 25px rgba(255,255,255,0.02);
+            position: relative;
+        }
+        .selection-grid-page .entry-btn:hover {
+            transform: scale(1.03);
+            filter: brightness(1.3);
+            box-shadow: 0 0 40px currentColor, 0 0 80px currentColor, inset 0 0 30px currentColor;
+        }
+        .selection-grid-page .entry-btn.selected {
+            border-color: #22c55e !important;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15), 0 0 30px rgba(34, 197, 94, 0.05) !important;
+            filter: brightness(1.1);
+        }
+        .merchant-grid-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+        .merchant-grid-page .entry-btn {
+            max-width: none;
+            padding: 16px 20px;
+            font-size: 13px;
+            border-radius: 8px;
+            text-align: center;
+            border: 3px solid rgba(255,255,255,0.15);
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor;
+            -webkit-text-stroke: 1.5px rgba(0,0,0,0.6);
+            paint-order: stroke fill;
+            box-shadow: 0 0 25px rgba(255,255,255,0.05), inset 0 0 25px rgba(255,255,255,0.02);
+            position: relative;
+        }
+        .merchant-grid-page .entry-btn:hover {
+            transform: scale(1.03);
+            filter: brightness(1.3);
+            box-shadow: 0 0 40px currentColor, 0 0 80px currentColor, inset 0 0 30px currentColor;
+        }
+        .merchant-grid-page .entry-btn.selected {
+            border-color: #22c55e !important;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15), 0 0 30px rgba(34, 197, 94, 0.05) !important;
+            filter: brightness(1.1);
+        }
+        .selection-category {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .back-btn:hover {
+            border-color: #00f2ff;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+        .selection-status-page {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 10px;
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            line-height: 1.6;
+        }
+        .selection-status-page .status-item {
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            padding: 2px 10px;
+            margin: 2px 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        @media (max-width: 768px) {
+            .selection-grid-page {
+                grid-template-columns: 1fr 1fr;
+            }
+            .merchant-grid-page {
+                grid-template-columns: 1fr 1fr;
+            }
+            .selection-grid-page .entry-btn {
+                font-size: 11px;
+                padding: 12px 14px;
+            }
+            .merchant-grid-page .entry-btn {
+                font-size: 11px;
+                padding: 12px 14px;
+            }
+            .roll-btn {
+                font-size: 12px;
+                padding: 14px 20px;
+                max-width: 320px;
+            }
+        }
+        @media (max-width: 480px) {
+            .selection-grid-page {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .merchant-grid-page {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .selection-grid-page .entry-btn {
+                font-size: 10px;
+                padding: 10px 10px;
+            }
+            .merchant-grid-page .entry-btn {
+                font-size: 10px;
+                padding: 10px 10px;
+            }
+            .roll-btn {
+                font-size: 10px;
+                padding: 12px 16px;
+                max-width: 280px;
+            }
+        }
+        /* Text color styles with brighter text and larger black outline */
+        .biome-text-windy { color: #E8F8FF; text-shadow: 0 0 20px #A3E3FF, 0 0 40px #A3E3FF, 0 0 60px #A3E3FF; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-rainy { color: #A8D4F0; text-shadow: 0 0 20px #3B6291, 0 0 40px #3B6291, 0 0 60px #3B6291; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-snowy { color: #FFFFFF; text-shadow: 0 0 20px #FFFFFF, 0 0 40px #FFFFFF, 0 0 60px #FFFFFF; -webkit-text-stroke: 1.5px rgba(0,0,0,0.5); }
+        .biome-text-sand { color: #FCE8B8; text-shadow: 0 0 20px #E1BC69, 0 0 40px #E1BC69, 0 0 60px #E1BC69; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-hell { color: #FF9999; text-shadow: 0 0 20px #FF3B3B, 0 0 40px #FF3B3B, 0 0 60px #FF3B3B; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-starfall { color: #6A6DB0; text-shadow: 0 0 20px #191B3B, 0 0 40px #191B3B, 0 0 60px #191B3B; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-heaven { color: #FDFCDE; text-shadow: 0 0 20px #FAF893, 0 0 40px #FAF893, 0 0 60px #FAF893; -webkit-text-stroke: 1.5px rgba(0,0,0,0.5); }
+        .biome-text-corruption { color: #D999F0; text-shadow: 0 0 20px #8D33B5, 0 0 40px #8D33B5, 0 0 60px #8D33B5; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-null { color: #999999; text-shadow: 0 0 20px #3B3B3B, 0 0 40px #3B3B3B, 0 0 60px #3B3B3B; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-singularity { color: #F0C88A; text-shadow: 0 0 20px #A65B00, 0 0 40px #A65B00, 0 0 60px #A65B00; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-dreamspace { color: #FFD8F5; text-shadow: 0 0 20px #FF87ED, 0 0 40px #FF87ED, 0 0 60px #FF87ED; -webkit-text-stroke: 1.5px rgba(0,0,0,0.5); }
+        .biome-text-glitched { color: #66D699; text-shadow: 0 0 20px #004D1A, 0 0 40px #004D1A, 0 0 60px #004D1A; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .biome-text-cyberspace { color: #7A9AFF; text-shadow: 0 0 20px #0010BD, 0 0 40px #0010BD, 0 0 60px #0010BD; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .merchant-text-mari { color: #E68888; text-shadow: 0 0 20px #330000, 0 0 40px #330000, 0 0 60px #330000; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .merchant-text-jester { color: #D999FF; text-shadow: 0 0 20px #7B18C9, 0 0 40px #7B18C9, 0 0 60px #7B18C9; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
+        .merchant-text-rin { color: #FFCC88; text-shadow: 0 0 20px #CC7800, 0 0 40px #CC7800, 0 0 60px #CC7800; -webkit-text-stroke: 1.5px rgba(0,0,0,0.7); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between">
@@ -363,17 +620,54 @@
         <p class="text-white text-base md:text-lg font-bold tracking-widest uppercase">Rotate to Landscape</p>
     </div>
     
+    <!-- Selection Page -->
+    <div id="selection-page">
+        <button class="back-btn" onclick="closeSelectionPage()">← Back</button>
+        <input type="text" id="search-input" class="selection-search" placeholder="Search biomes or merchants..." oninput="filterSelections()">
+        
+        <div class="selection-category">BIOMES</div>
+        <div class="selection-grid-page" id="biome-grid-page">
+            <button class="entry-btn biome-text-windy" data-biome="WINDY" style="background: #A3E3FF; border-color: #A3E3FF; color: #E8F8FF;" onclick="toggleBiomePage('WINDY')">WINDY</button>
+            <button class="entry-btn biome-text-rainy" data-biome="RAINY" style="background: #3B6291; border-color: #3B6291; color: #A8D4F0;" onclick="toggleBiomePage('RAINY')">RAINY</button>
+            <button class="entry-btn biome-text-snowy" data-biome="SNOWY" style="background: #FFFFFF; border-color: #FFFFFF; color: #FFFFFF;" onclick="toggleBiomePage('SNOWY')">SNOWY</button>
+            <button class="entry-btn biome-text-sand" data-biome="SAND STORM" style="background: #E1BC69; border-color: #E1BC69; color: #FCE8B8;" onclick="toggleBiomePage('SAND STORM')">SAND STORM</button>
+            <button class="entry-btn biome-text-hell" data-biome="HELL" style="background: #FF3B3B; border-color: #FF3B3B; color: #FF9999;" onclick="toggleBiomePage('HELL')">HELL</button>
+            <button class="entry-btn biome-text-starfall" data-biome="STARFALL" style="background: #191B3B; border-color: #191B3B; color: #6A6DB0;" onclick="toggleBiomePage('STARFALL')">STARFALL</button>
+            <button class="entry-btn biome-text-heaven" data-biome="HEAVEN" style="background: #FAF893; border-color: #FAF893; color: #FDFCDE;" onclick="toggleBiomePage('HEAVEN')">HEAVEN</button>
+            <button class="entry-btn biome-text-corruption" data-biome="CORRUPTION" style="background: #8D33B5; border-color: #8D33B5; color: #D999F0;" onclick="toggleBiomePage('CORRUPTION')">CORRUPTION</button>
+            <button class="entry-btn biome-text-null" data-biome="NULL" style="background: #3B3B3B; border-color: #3B3B3B; color: #999999;" onclick="toggleBiomePage('NULL')">NULL</button>
+            <button class="entry-btn biome-text-singularity" data-biome="SINGULARITY" style="background: #A65B00; border-color: #A65B00; color: #F0C88A;" onclick="toggleBiomePage('SINGULARITY')">SINGULARITY</button>
+            <button class="entry-btn biome-text-dreamspace" data-biome="DREAMSPACE" style="background: #FF87ED; border-color: #FF87ED; color: #FFD8F5;" onclick="toggleBiomePage('DREAMSPACE')">DREAMSPACE</button>
+            <button class="entry-btn biome-text-glitched" data-biome="GLITCHED" style="background: #004D1A; border-color: #004D1A; color: #66D699;" onclick="toggleBiomePage('GLITCHED')">GLITCHED</button>
+            <button class="entry-btn biome-text-cyberspace" data-biome="CYBERSPACE" style="background: #0010BD; border-color: #0010BD; color: #7A9AFF;" onclick="toggleBiomePage('CYBERSPACE')">CYBERSPACE</button>
+        </div>
+        
+        <div class="selection-category">MERCHANTS</div>
+        <div class="merchant-grid-page" id="merchant-grid-page">
+            <button class="entry-btn merchant-text-mari" data-merchant="MARI" style="background: #330000; border-color: #330000; color: #E68888;" onclick="toggleMerchantPage('MARI')">MARI</button>
+            <button class="entry-btn merchant-text-jester" data-merchant="JESTER" style="background: #7B18C9; border-color: #7B18C9; color: #D999FF;" onclick="toggleMerchantPage('JESTER')">JESTER</button>
+            <button class="entry-btn merchant-text-rin" data-merchant="RIN" style="background: #CC7800; border-color: #CC7800; color: #FFCC88;" onclick="toggleMerchantPage('RIN')">RIN</button>
+        </div>
+        
+        <div id="selection-status-page" class="selection-status-page">No selections made</div>
+    </div>
+    
     <div id="entry-overlay">
-        <button id="start-btn" onclick="showFullscreenPrompt()" class="roll-btn px-10 py-4 text-lg md:text-xl border-2">Test your cyberspace luck</button>
-        <p class="mt-4 text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold flex items-center justify-center gap-2">
-            Made by 
-            <a href="https://www.youtube.com/@tlq_h" target="_blank" rel="noopener noreferrer" class="credit-link">
-                <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.376.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.376-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                @tlq_h
-            </a>
-        </p>
+        <div id="entry-overlay-content">
+            <button id="start-btn" onclick="showFullscreenPrompt()" class="roll-btn" style="margin-bottom: 12px;">TEST YOUR<br>CYBERSPACE LUCK</button>
+            
+            <button onclick="openSelectionPage()" class="roll-btn" style="font-weight: 700; letter-spacing: 0.1em; font-size: 14px; margin-bottom: 16px;">FREE BIOMES &<br>MERCHANTS</button>
+            
+            <p class="text-[10px] md:text-xs text-white/60 tracking-[0.2em] uppercase font-bold flex items-center justify-center gap-2">
+                Made by 
+                <a href="https://www.youtube.com/@tlq_h" target="_blank" rel="noopener noreferrer" class="credit-link">
+                    <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.376.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.376-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    @tlq_h
+                </a>
+            </p>
+        </div>
     </div>
     
     <div id="fullscreen-prompt">
@@ -394,7 +688,6 @@
     </div>
     <div id="flash" class="fixed inset-0 pointer-events-none z-[60]"></div>
     
-    <!-- Background container with image instead of grid -->
     <div class="cyber-grid-container" id="grid-container">
         <img src="https://files.catbox.moe/9j8mnh.jpg" class="bg-image" alt="background">
         <div class="glass-overlay"></div>
@@ -433,7 +726,6 @@
     </div>
 
     <div id="ui-bottom" class="fixed bottom-0 left-0 w-full p-2 md:p-4 z-20 flex items-end justify-between pointer-events-none">
-        <!-- LEFT SIDE -->
         <div class="flex flex-col gap-2 w-40 md:w-64 pointer-events-auto">
             <button id="pole-device-btn" onclick="togglePoleDevice()" class="pole-btn flex items-center justify-between px-3 md:px-5 py-2 md:py-2.5 w-full">
                 <div class="flex items-center gap-2">
@@ -485,7 +777,6 @@
             <button onclick="runSim(1)" class="roll-btn w-full md:w-auto px-6 md:px-20 h-10 md:h-16 text-sm md:text-2xl">ROLL</button>
         </div>
         
-        <!-- RIGHT SIDE -->
         <div class="flex flex-col gap-2 w-44 md:w-72 pointer-events-auto">
             <button id="fullscreen-toggle-btn" onclick="toggleFullscreen()" class="fullscreen-btn right-side-btn flex items-center justify-between px-3 md:px-5 py-3 md:py-4 w-full">
                 <div class="flex flex-col text-left">
@@ -534,6 +825,8 @@
         let isProcessingAura = false;
         let pendingAuraRollNumber = null;
         let isFullscreen = false;
+        let selectedBiomes = new Set();
+        let selectedMerchants = new Set();
         
         const illusionarySFX = new Audio('https://pomf2.lain.la/f/vvei5e1c.mov');
         const bgm = new Audio('https://files.catbox.moe/ows91z.mp3');
@@ -552,6 +845,73 @@
         });
 
         cinematicOverlay.ondblclick = function(e) {};
+
+        function openSelectionPage() {
+            document.getElementById('selection-page').style.display = 'flex';
+            document.getElementById('entry-overlay').style.display = 'none';
+            updateSelectionStatusPage();
+        }
+
+        function closeSelectionPage() {
+            document.getElementById('selection-page').style.display = 'none';
+            document.getElementById('entry-overlay').style.display = 'flex';
+        }
+
+        function filterSelections() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const biomeBtns = document.querySelectorAll('#biome-grid-page .entry-btn');
+            const merchantBtns = document.querySelectorAll('#merchant-grid-page .entry-btn');
+            
+            biomeBtns.forEach(btn => {
+                const text = btn.textContent.toLowerCase();
+                btn.style.display = text.includes(search) ? '' : 'none';
+            });
+            
+            merchantBtns.forEach(btn => {
+                const text = btn.textContent.toLowerCase();
+                btn.style.display = text.includes(search) ? '' : 'none';
+            });
+        }
+
+        function toggleBiomePage(biome) {
+            const target = document.querySelector(`#biome-grid-page .entry-btn[data-biome="${biome}"]`);
+            if (selectedBiomes.has(biome)) {
+                selectedBiomes.delete(biome);
+                target.classList.remove('selected');
+            } else {
+                selectedBiomes.add(biome);
+                target.classList.add('selected');
+            }
+            updateSelectionStatusPage();
+        }
+
+        function toggleMerchantPage(merchant) {
+            const target = document.querySelector(`#merchant-grid-page .entry-btn[data-merchant="${merchant}"]`);
+            if (selectedMerchants.has(merchant)) {
+                selectedMerchants.delete(merchant);
+                target.classList.remove('selected');
+            } else {
+                selectedMerchants.add(merchant);
+                target.classList.add('selected');
+            }
+            updateSelectionStatusPage();
+        }
+
+        function updateSelectionStatusPage() {
+            const status = document.getElementById('selection-status-page');
+            let parts = [];
+            if (selectedBiomes.size > 0) {
+                parts.push(`BIOMES: ${Array.from(selectedBiomes).join(', ')}`);
+            }
+            if (selectedMerchants.size > 0) {
+                parts.push(`MERCHANTS: ${Array.from(selectedMerchants).join(', ')}`);
+            }
+            if (parts.length === 0) {
+                status.innerHTML = 'No selections made';
+            } else {
+                status.innerHTML = parts.map(p => `<span class="status-item">${p}</span>`).join(' ');
+            }
+        }
 
         function applyPoleBonus(originalCount) {
             if (!isPoleDeviceEnabled) return originalCount;
